@@ -8,9 +8,9 @@
 }
 
 
-* {
+/* * {
   outline: 1px solid red;
-}
+} */
 
 .darkmode
 {
@@ -110,20 +110,9 @@ body
 }
 
 
-/* button
-{
-    height: 50px;
-    width: 100px;
-    font-size: 15px;
-    background-color: black;
-    color: white;
-    border-style: dashed;
-    border-width: 2px;
-    border-color: gray;
-} */
-
 #theme_switch
 {
+    position: relative;
     background-color: var(--secondary-bg-color);
     border: solid transparent;
     width: 2.5rem;
@@ -131,18 +120,33 @@ body
     aspect-ratio: 1/1;
     border-radius: 30%;
     color: var(--text-color);
+
 }
 
 #theme_switch svg{
+    position: relative;
     width: 70%;
     height: 70%;
     fill: currentColor;
+    z-index: 1;
 }
 
-#theme_switch:hover
+#theme_switch::after
 {
+    content: "";
+    position: absolute;
+    inset: 0;
+    
     background-color: var(--background-color);
-    color: var(--text-color);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 30%;
+    z-index: 0;
+}
+
+#theme_switch:hover::after
+{
+    opacity: 1;
 }
 
 
