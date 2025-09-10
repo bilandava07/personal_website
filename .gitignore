@@ -1,5 +1,9 @@
 .gitattributes
 
+# Ignore all media 
+imgs/
+videos/
+
 # Ignore all mp4 
 
 *.mp4
