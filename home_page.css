@@ -155,3 +155,9 @@ body
 .navbar{
     background-color: var();
 }
+
+video{
+    width: 50%;
+    height: auto;
+    padding: 10% 0 0 25%;
+}
