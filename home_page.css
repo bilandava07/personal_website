@@ -16,7 +16,7 @@
 .darkmode
 {
     --background-color: #2f2f2f;
-    --secondary-bg-color: #3d3d3d;
+    --secondary-bg-color: #555555;
     --highlight-color: #9dbce8; 
     --text-color: #d7d7d7;
     --accent-color: #E8175D;
@@ -123,7 +123,7 @@ body
 #theme_switch
 {
     position: relative;
-    background-color: var(--secondary-bg-color);
+    background-color: var(--background-color);
     border: solid transparent;
     width: 2.5rem;
     height: 2.5rem;
@@ -152,7 +152,7 @@ body
     position: absolute;
     inset: 0;
     
-    background-color: var(--background-color);
+    background-color: var(--secondary-bg-color);
     opacity: 0;
     transition: opacity 0.5s;
     border-radius: 30%;
