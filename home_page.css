@@ -84,18 +84,15 @@ body
     text-decoration: none;
     color: inherit;
     display: inline-block;
-    transition: 0.3s;
+    transition: transform 0.3s;
 }
 
-.navlist li a:active{
 
-    color: red; 
-}
 
 .navlist li a:hover
 {
     color: var(--highlight-color);
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
 
 #theme_switch
