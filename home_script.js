@@ -23,6 +23,10 @@ if (localStorage.getItem("theme") === "light")
 {
     doc_html.classList.remove("darkmode");
 }
+else
+{
+    localStorage.setItem('theme', 'dark');
+}
 
 function enable_darkmode()
 {
