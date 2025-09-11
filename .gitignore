@@ -13,3 +13,4 @@ videos/
 *.jpeg
 *.png
 *.gif
+.DS_Store
