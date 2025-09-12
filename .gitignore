@@ -23,3 +23,8 @@ videos/
 venv/
 __pycache__/
 *.pyc
+
+# Small script to copy the images locally to the pi5 (deployment server)
+copy_media_to_deployment.sh
+
+
