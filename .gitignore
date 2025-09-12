@@ -13,4 +13,13 @@ videos/
 *.jpeg
 *.png
 *.gif
+
+#---------
+# Mac specific files
 .DS_Store
+#---------
+
+# Env and pycache
+venv/
+__pycache__/
+*.pyc
