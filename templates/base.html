@@ -15,7 +15,7 @@ for all pages across the website (navbar, footer etc.)-->
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
 
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -84,7 +84,7 @@ for all pages across the website (navbar, footer etc.)-->
 
 
 
-    <script src="{{ url_for('static', filename = 'js/home_script.js') }}"></script>
+    <script src="/static/js/home_script.js"></script>
     
     <!-- The actual content of the page is injected into this block-->
     {% block body %} {% endblock %}
