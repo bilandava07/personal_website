@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 
 {% block body %}
-        <img src="/static/images/bike.jpeg"
+
+<h1> All trips</h1>
+
+<ul>
+        {% for trip in trips_preview %}
+                
+                <li>
+                        <h2> {{ trip.trip_name }} </h2>
+                        <img src="{{ trip.image_path }} ">
+
+                </li>
+        {% endfor %}
+</ul>
+
 {% endblock %}
 
