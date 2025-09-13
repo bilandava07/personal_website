@@ -28,3 +28,4 @@ __pycache__/
 copy_media_to_deployment.sh
 
 
+.vscode/settings.json
