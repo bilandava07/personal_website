@@ -25,7 +25,7 @@ def init_db(db_name):
     with sqlite3.connect(db_name) as connection:
         connection.execute('''
             CREATE TABLE IF NOT EXISTS trips(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                trip_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 trip_name TEXT NOT NULL,
                 start_time TEXT NOT NULL,
                 avg_speed FLOAT NOT NULL,
@@ -44,7 +44,7 @@ def init_db(db_name):
                 trip_id INTEGER NOT NULL,
                 image_path TEXT NOT NULL,
                 is_main BOOLEAN DEFAULT 0,
-                FOREIGN KEY (trip_id)  REFERENCES trips(id)
+                FOREIGN KEY (trip_id)  REFERENCES trips(trip_id)
             )
         ''')
 
@@ -62,9 +62,9 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DES
         # Default to descending order if parameter is invalid
         order_by = 'DESC'
     querry = f'''
-        SELECT trips.id, trips.trip_name, trips_images.image_path 
+        SELECT trips.trip_id, trips.trip_name, trips_images.image_path 
         FROM trips
-        LEFT JOIN trips_images ON trips.id = trips_images.trip_id 
+        LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
         AND trips_images.is_main = 1
         ORDER BY trips.total_time {order_by}
     '''
