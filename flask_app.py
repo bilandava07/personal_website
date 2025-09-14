@@ -82,7 +82,7 @@ def home_page():
     '''Renders the home page'''
     return render_template('home_page.html')
 
-@app.route('/bike')
+@app.route('/cycling')
 def cycling_page():
     ''' Renders the main cycling page '''
 
