@@ -1,8 +1,50 @@
+import os
 import sqlite3
 from zoneinfo import ZoneInfo
 from fitparse import FitFile
 
-def add_image_to_trip()
+
+def add_image_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, is_main : int | None) -> bool:
+    '''
+    Promts the user for the image path of the image to be inserted to the trip
+    inserts the image to the trips_images table 
+    '''
+
+    if not trip_id:
+        # Prompt the user for trip_id if the function is being used to manually
+        # add an image to an already existing trip 
+        trip_id = input("ID of the trip the image is being added to: ")
+
+    while True:
+
+        image_path = input("Path of the image to be added: ")
+
+        if os.path.isfile(image_path):
+            print("File exists. Safe to insert")
+            break
+        else:
+            print('File does not exist on the disk! File path should look like [static/images/img_name.jpeg]')
+
+
+
+
+    if is_main not in (1, 0, None):
+        # Prompt the user for the is_main attribute
+        while True:
+            is_main = input("Is the picture the main of the trip? [y/n]")
+
+            if isinstance(is_main, str):
+                if is_main.lower() == 'y':
+                    is_main = 1 
+                    break
+                elif is_main.lower() == 'n':
+                    is_main = 0
+                    break
+
+    insert_statement = '''INSERT INTO trips_images (trip_id, image_path, is_main) VALUES (?,?,?)'''
+
+    cursor.execute(insert_statement, (trip_id, image_path, is_main))
+
 
 def test_querry_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
     '''
@@ -10,7 +52,7 @@ def test_querry_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
     Prompts user to confirm if the row was added successfully or not 
     '''
 
-    querry = ''' SELECT * from trips WHERE trips.id = ?'''
+    querry = ''' SELECT * from trips LEFT JOIN trips_images USING (trip_id) WHERE trips.trip_id = ?'''
 
     cursor.execute(querry, (row_id,))
     newly_added_trip = dict(cursor.fetchone())
@@ -24,10 +66,12 @@ def test_querry_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
 
     while True:
         confirm = input("The trip was inserted as expected?[y/n]")
-        if confirm.lower() == 'y':
-            return True
-        elif confirm.lower() == 'n':
-            return False   
+
+        if isinstance(confirm, str):
+            if confirm.lower() == 'y':
+                return True
+            elif confirm.lower() == 'n':
+                return False   
 
 
 def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
@@ -117,8 +161,28 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
 
     cursor.execute(insert_statement, ride_values_to_insert)
 
+    newly_added_trip_id = cursor.lastrowid
+
+
+    adding_images = True
+
+    while adding_images:
+        add_main_img_input = input("Add main image to the trip? [y/n]\n")
+        if isinstance(add_main_img_input, str):
+            if add_main_img_input.lower() == 'y':
+                add_image_to_trip(cursor=cursor, trip_id=newly_added_trip_id, is_main=1)
+
+                # TODO: Add other regular images loop 
+                # (maybe image paths separated by commas and then split on comma list)
+                break
+
+
+            elif add_main_img_input.lower() == 'n':
+                adding_images = False
+            
     # Test if the row was added correctly
     successfully_added = test_querry_id(cursor=cursor, row_id=cursor.lastrowid)
+
 
     if successfully_added:
         connection.commit()
