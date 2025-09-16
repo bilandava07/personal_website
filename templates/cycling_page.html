@@ -44,7 +44,12 @@
 
         <li>
                 <h2> {{ trip.trip_name }}</h2>
-                <img src="{{ trip.image_path }}">
+                <img src="{{ url_for('static', filename='images/' + trip.image_filename) }}">
+
+                <p>
+                        {{ url_for('static', filename='images/' + trip.geojson_filename)}}
+                </p>
+        
 
         </li>
         {% endfor %}
