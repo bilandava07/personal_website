@@ -34,7 +34,8 @@ def init_db(db_name):
                 total_time FLOAT NOT NULL,
                 moving_time FLOAT NOT NULL,
                 total_ascent FLOAT NOT NULL,
-                total_descent FLOAT NOT NULL
+                total_descent FLOAT NOT NULL,
+                geojson_filename TEXT NOT NULL
             )
         ''')
 
@@ -42,7 +43,7 @@ def init_db(db_name):
             CREATE TABLE IF NOT EXISTS trips_images(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 trip_id INTEGER NOT NULL,
-                image_path TEXT NOT NULL,
+                image_filename TEXT NOT NULL,
                 is_main BOOLEAN DEFAULT 0,
                 FOREIGN KEY (trip_id)  REFERENCES trips(trip_id)
             )
@@ -51,7 +52,7 @@ def init_db(db_name):
         connection.commit()
 
 
-def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DESC'):
+def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DESC') -> list[any]:
     '''
     Querries the database for all trips and their ids and names
     Does so by taking into account user's ordering preference 
@@ -62,7 +63,7 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DES
         # Default to descending order if parameter is invalid
         order_by = 'DESC'
     querry = f'''
-        SELECT trips.trip_id, trips.trip_name, trips_images.image_path 
+        SELECT trips.trip_id, trips.trip_name, trips_images.image_filename, trips.geojson_filename 
         FROM trips
         LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
         AND trips_images.is_main = 1
