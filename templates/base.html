@@ -17,6 +17,8 @@ for all pages across the website (navbar, footer etc.)-->
 
     <link href="static/css/style.css" rel="stylesheet">
 
+    {% block leaflet %} {% endblock %}
+
 </head>
 
 <body class="{% block body_class %}{% endblock%}">
@@ -87,6 +89,8 @@ for all pages across the website (navbar, footer etc.)-->
 
     <!-- The actual content of the page is injected into this block-->
     {% block body %} {% endblock %}
+
+    {% block extra_js %}{% endblock %}
 
 </body>
 
