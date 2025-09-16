@@ -167,7 +167,7 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     route_geo_json = json.dumps(geojson_dict)
 
     # Generate random unique name
-    geojson_filename = f"{uuid.uuid4().hex}.json"
+    geojson_filename = f"{uuid.uuid4().hex}.geojson"
 
     folder = "static/geo_json"
 
