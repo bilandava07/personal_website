@@ -1,4 +1,7 @@
 import os
+import uuid
+import json
+from datetime import datetime
 import sqlite3
 from zoneinfo import ZoneInfo
 from fitparse import FitFile
@@ -17,13 +20,16 @@ def add_image_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, is_main : in
 
     while True:
 
-        image_path = input("Path of the image to be added: ")
+        image_path = input("Name of the image to be added: ")
 
-        if os.path.isfile(image_path):
+        # Join the folder path and the filename
+        full_path = os.path.join('static', 'images', image_path)
+
+        if os.path.isfile(full_path):
             print("File exists. Safe to insert")
             break
         else:
-            print('File does not exist on the disk! File path should look like [static/images/img_name.jpeg]')
+            print('File does not exist on the disk! File should exist in [static/images/img_name.jpeg]')
 
 
 
@@ -35,13 +41,13 @@ def add_image_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, is_main : in
 
             if isinstance(is_main, str):
                 if is_main.lower() == 'y':
-                    is_main = 1 
+                    is_main = 1
                     break
                 elif is_main.lower() == 'n':
                     is_main = 0
                     break
 
-    insert_statement = '''INSERT INTO trips_images (trip_id, image_path, is_main) VALUES (?,?,?)'''
+    insert_statement = '''INSERT INTO trips_images (trip_id, image_filename, is_main) VALUES (?,?,?)'''
 
     cursor.execute(insert_statement, (trip_id, image_path, is_main))
 
@@ -65,7 +71,7 @@ def test_querry_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
 
 
     while True:
-        confirm = input("The trip was inserted as expected?[y/n]")
+        confirm = input("The trip was inserted as expected?[y/n]\n")
 
         if isinstance(confirm, str):
             if confirm.lower() == 'y':
@@ -80,18 +86,12 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     and converting all values to the appropriate format
     '''
 
-    fitfile = FitFile('rides_fit/' + input("Name of the fit file to parse and get data from: "))
+    # fitfile = FitFile('rides_fit/' + input("Name of the fit file to parse and get data from: "))
 
-    # Parses the .fit file and returns a readable json with name and values of the fit fields
-    for session in fitfile.get_messages('session'):
-        ride_data = {}
-        for field in session:
-            ride_data[field.name] = field.value
+    # Testing file to avoid having to paste the name everytime
+    fitfile = FitFile('rides_fit/' + "2025-09-12-160814-ELEMNT ROAM B53E-57-0.fit")
 
-    print(ride_data)
-
-    # Prompt user for trip_name and confirmation
-
+    # Prompt the user for the name of the trip
     confirmed = False
 
     while not confirmed:
@@ -101,6 +101,83 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
 
         if confirm.lower() == 'y':
             confirmed = True
+
+    # Parses the .fit file and returns a readable json with name and values of the fit fields
+    for session in fitfile.get_messages('session'):
+        ride_data = {}
+        for field in session:
+            ride_data[field.name] = field.value
+
+    print(ride_data)
+
+    # Extract the route from the .fit file
+    raw_route_coordinates = []
+
+    for record in fitfile.get_messages('record'):
+        # Convert the time_stamp to seconds right away to be able to do math on them later
+        
+        time_stamp = datetime.fromisoformat(str(record.get_value('timestamp')))
+        lon = record.get_value('position_long')
+        lat = record.get_value('position_lat')
+
+        # Convert the semicircles to degrees
+        if lat is not None and lon is not None:
+            lon_deg = lon * (180 / 2**31)
+            lat_deg = lat * (180 / 2**31)
+
+            raw_route_coordinates.append((time_stamp, lon_deg, lat_deg))
+
+
+    
+    # Filter the coordinates to only leave one coordinate every [interval] seconds
+    filtered_route_coordinates = []
+
+    last_ts = None
+
+    interval = 10 # seconds
+
+    for coordinate in raw_route_coordinates:
+        current_ts = coordinate[0] # datetime object
+
+        # Initialize last_ts
+        if last_ts is None:
+            # Always add the first point
+            filtered_route_coordinates.append((coordinate[1], coordinate[2]))
+            last_ts = coordinate[0]
+            continue
+
+
+        # Add if interval has passed
+        if (current_ts - last_ts).total_seconds() >= interval:
+            # If reached interval, only append the lat and long
+            filtered_route_coordinates.append((coordinate[1],coordinate[2]))
+            last_ts = current_ts
+
+
+
+    # Create GeoJSON file using the coordinates
+    geojson_dict = {
+    "type": "Feature",
+    "geometry": {
+        "type": "LineString",
+        "coordinates": filtered_route_coordinates
+        }
+    }
+
+    route_geo_json = json.dumps(geojson_dict)
+
+    # Generate random unique name
+    geojson_filename = f"{uuid.uuid4().hex}.json"
+
+    folder = "static/geo_json"
+
+    # Full path to the file
+    geo_json_path = os.path.join(folder, geojson_filename)
+
+    # Write the route GeoJSON to the file to reference it later
+    with open(geo_json_path, 'w') as file:
+        file.write(route_geo_json)
+
 
 
     # Get the data to insert to the table from the json
@@ -137,26 +214,27 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
         total_time_s,
         moving_time,
         total_ascent,
-        total_descent
+        total_descent,
+        geojson_filename
     )
 
-    print(ride_values_to_insert)
+    # Testing purposes confirmation prompt
 
-    confirmed = False
+    # print(ride_values_to_insert)
 
-    while not confirmed:
-        confirm = input("Those are values that will be inserted into the databased, procceed? [y]\n")
-        if confirm.lower() == 'y':
-            confirmed = True
+    # confirmed = False
+
+    # while not confirmed:
+    #     confirm = input("Those are values that will be inserted into the databased, procceed? [y]\n")
+    #     if confirm.lower() == 'y':
+    #         confirmed = True
 
     # Insert the tuple into the database
 
-
-
     insert_statement = ''' INSERT INTO trips 
                     (trip_name, start_time, avg_speed, max_speed, distance, total_time, moving_time,
-                    total_ascent, total_descent)
-                    VALUES (?,?,?,?,?,?,?,?,?)
+                    total_ascent, total_descent, geojson_filename)
+                    VALUES (?,?,?,?,?,?,?,?,?,?)
                     '''
 
     cursor.execute(insert_statement, ride_values_to_insert)
