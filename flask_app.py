@@ -1,4 +1,6 @@
 import sqlite3
+from zoneinfo import ZoneInfo
+from datetime import datetime
 from flask import Flask, render_template, g
 
 app = Flask(__name__)
@@ -41,7 +43,7 @@ def init_db(db_name):
 
         connection.execute('''
             CREATE TABLE IF NOT EXISTS trips_images(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                image_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 trip_id INTEGER NOT NULL,
                 image_filename TEXT NOT NULL,
                 is_main BOOLEAN DEFAULT 0,
@@ -50,6 +52,62 @@ def init_db(db_name):
         ''')
 
         connection.commit()
+
+def convert_trip_stats(raw_trip) -> dict:
+    # Converts trip's values to the right format for presentation on the frontend
+    avg_speed_kmh = round(raw_trip['avg_speed'] * 3.6, 1)
+    max_speed_kmh = round(raw_trip['max_speed'] * 3.6, 1)
+
+    distance_km = round(raw_trip['distance'] / 1000, 1)
+
+    # convert time from seconds to respective formats
+
+    total_time_hr = round(raw_trip['total_time'] / 3600)
+    total_time_min = round((raw_trip['total_time'] % 3600) / 60)
+
+    total_time_formatted = f"{total_time_hr} h {total_time_min} m"
+
+    moving_time_hr = round(raw_trip['moving_time'] / 3600)
+    moving_time_m = round((raw_trip['moving_time'] % 3600) / 60)
+
+    moving_time_formatted = f"{moving_time_hr} h {moving_time_m} m"
+
+
+    # Convert to local timezone
+    start_time_utc = datetime.fromisoformat(raw_trip['start_time'])
+    start_time_utc = start_time_utc.replace(tzinfo=ZoneInfo("UTC"))
+    local_tz = ZoneInfo("Europe/Berlin")  # change to your timezone
+    start_time_local = start_time_utc.astimezone(local_tz)
+    # Display format 
+    start_date_time_formatted = start_time_local.strftime("%d %B %Y at %H:%M")
+
+
+    paused_seconds = raw_trip['total_time'] - raw_trip['moving_time']
+    paused_time_hr = paused_seconds // 3600
+    paused_time_min = (paused_seconds % 3600) // 60
+    paused_time_formatted = f"{paused_time_hr} h {paused_time_min} m"
+
+
+    # Return formatted data ready to display on the frontend 
+    return {
+        "trip_name" : raw_trip["trip_name"],
+        "trip_id" : raw_trip["trip_id"],
+        "avg_speed_kmh" : avg_speed_kmh,
+        "max_speed_kmh" : max_speed_kmh,
+        "distance_km" : distance_km,
+        "total_time_formatted" : total_time_formatted,
+        "moving_time_formatted" : moving_time_formatted,
+        "start_date_time_formatted" : start_date_time_formatted,
+        "paused_time_formatted" : paused_time_formatted,
+        "total_ascent" : raw_trip['total_ascent'],
+        "total_descent" : raw_trip['total_descent'],
+        "geojson_filename" : raw_trip['geojson_filename'],
+    
+        "image_id" : raw_trip["image_id"],
+        "image_filename" : raw_trip["image_filename"],
+        "is_main" : raw_trip["is_main"]
+        
+    }
 
 
 def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DESC') -> list[any]:
@@ -63,14 +121,46 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DES
         # Default to descending order if parameter is invalid
         order_by = 'DESC'
     querry = f'''
-        SELECT trips.trip_id, trips.trip_name, trips_images.image_filename, trips.geojson_filename 
+        SELECT   
+            trips.trip_id,
+            trips.trip_name,
+            trips.start_time,
+            trips.avg_speed,
+            trips.max_speed,
+            trips.distance,
+            trips.total_time,
+            trips.moving_time,
+            trips.total_ascent,
+            trips.total_descent,
+            trips.geojson_filename,
+            trips_images.image_id,
+            trips_images.image_filename,
+            trips_images.is_main
         FROM trips
         LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
         AND trips_images.is_main = 1
         ORDER BY trips.total_time {order_by}
     '''
+    raw_trips = cursor.execute(querry).fetchall()
 
-    return cursor.execute(querry).fetchall()
+    # List of tuples where each tuple is a trip 
+    trips_converted = []
+
+
+    # Convert the trips to the right format
+    for raw_trip in raw_trips:
+        trips_converted.append(convert_trip_stats(raw_trip=raw_trip))
+
+    return trips_converted
+
+        
+
+
+
+
+
+
+    
 
 init_db(TRIPS_DATABASE)
 
@@ -89,11 +179,9 @@ def cycling_page():
 
     cursor = get_db(TRIPS_DATABASE).cursor()
 
-    trips_preview = get_all_trips_with_main_images(cursor=cursor)
+    trips_formatted = get_all_trips_with_main_images(cursor=cursor)
 
-
-
-    return render_template('cycling_page.html', trips_preview = trips_preview)
+    return render_template('cycling_page.html', trips_formatted = trips_formatted)
 
 
 @app.teardown_appcontext

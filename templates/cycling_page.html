@@ -60,23 +60,37 @@ crossorigin=""></script>
 </div>
 
 <ul>
-        {% for trip in trips_preview %}
+        {% for trip in trips_formatted %}
 
-        <li>
-                <h2> {{ trip.trip_name }}</h2>
+        <div>
                 <img src="{{ url_for('static', filename='images/' + trip.image_filename) }}">
+                <h2> {{ trip.trip_name }}</h2>
 
- 
+                <div>
+                        <p>ID: {{trip.trip_id}}</p>
+                        <p>Start time: {{trip.start_date_time_formatted}}</p>
+
+                        <p>Distance: {{trip.distance_km}}<p>
+                        <p>Avg: {{trip.avg_speed_kmh}} km/h </p>
+                        <p>Max:  {{trip.max_speed_kmh}}</p>
+                </div>
+                <div>
+
+                        <p>Total time: {{trip.total_time_formatted}}</p>
+                        <p>Moving time: {{trip.moving_time_formatted}}</p>
+                        <p> GeoJSON filename: {{trip.geojson_filename}}</p>
+                </div>
+
                 <div id="map"></div>
         
 
-        </li>
+        </div>
         {% endfor %}
 </ul>
 
 {% endblock %}
 
 {% block extra_js %}
-<script src="static/js/leaflet_script.js"></script>
+<script src="/static/js/leaflet_script.js"></script>
 
 {% endblock %}

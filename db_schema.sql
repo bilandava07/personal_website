@@ -9,14 +9,14 @@ CREATE TABLE IF NOT EXISTS trips(
     moving_time FLOAT NOT NULL,
     total_ascent FLOAT NOT NULL,
     total_descent FLOAT NOT NULL,
-    geojson_file_name TEXT NOT NULL
+    geojson_filename TEXT NOT NULL
 
 
 )
 
 
 CREATE TABLE IF NOT EXISTS trips_images(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    image_id INTEGER PRIMARY KEY AUTOINCREMENT,
     trip_id INTEGER NOT NULL,
     image_filename TEXT NOT NULL,
     is_main BOOLEAN DEFAULT 0,
