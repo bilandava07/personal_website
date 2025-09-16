@@ -204,6 +204,7 @@ video{
 .cycling-page .navbar_container {
 
     background-color: transparent;
+    backdrop-filter: blur(2rem);
     z-index: 20;
 }
 
@@ -263,6 +264,17 @@ video{
     50% { transform: translateY(0.5em);}
 
     70%, 100% { transform: translateY(0);}
+}
+
+
+
+/* Leaflet map stuff */
+/* ------------------------------------------- */
+
+#map { 
+    height: 50rem;
+    aspect-ratio: 1;
+    z-index: 0;
 }
 
 
