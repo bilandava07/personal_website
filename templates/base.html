@@ -15,7 +15,7 @@ for all pages across the website (navbar, footer etc.)-->
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
 
-    <link href="static/css/style.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
 
     {% block leaflet %} {% endblock %}
 
@@ -39,8 +39,6 @@ for all pages across the website (navbar, footer etc.)-->
                         <li> <a href="{{ url_for('home_page')}}">Home</a></li>
                         <li>Projects</li>
                         <li><a href="{{ url_for('cycling_page')}}">Cycling</a></li>
-                        <li>Hikes</li>
-                        <li>Guitar</li>
                         <li>Contact</li>
                     </ul>
 

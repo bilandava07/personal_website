@@ -1,4 +1,5 @@
 import sqlite3
+from slugify import slugify
 from zoneinfo import ZoneInfo
 from datetime import datetime
 from flask import Flask, render_template, g
@@ -124,6 +125,38 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DES
         SELECT   
             trips.trip_id,
             trips.trip_name,
+            trips_images.image_id,
+            trips_images.image_filename,
+            trips_images.is_main
+        FROM trips
+        LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
+        AND trips_images.is_main = 1
+        ORDER BY trips.total_time {order_by}
+    '''
+    trip_overview = cursor.execute(querry).fetchall()
+
+    return trip_overview
+
+    # # List of tuples where each tuple is a trip 
+    # trips_converted = []
+
+
+    # # Convert the trips to the right format
+    # for raw_trip in raw_trips:
+    #     trips_converted.append(convert_trip_stats(raw_trip=raw_trip))
+
+    # return trips_converted
+
+
+def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
+    '''
+    Querries the database for one specific trip by ID to
+    then display it on the trip_page'''
+
+    querry = '''
+        SELECT   
+            trips.trip_id,
+            trips.trip_name,
             trips.start_time,
             trips.avg_speed,
             trips.max_speed,
@@ -139,28 +172,19 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DES
         FROM trips
         LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
         AND trips_images.is_main = 1
-        ORDER BY trips.total_time {order_by}
+        WHERE trips.trip_id = ?
     '''
-    raw_trips = cursor.execute(querry).fetchall()
+    raw_trip = cursor.execute(querry, (trip_id,)).fetchone()
 
-    # List of tuples where each tuple is a trip 
-    trips_converted = []
+    if raw_trip is None:
+        return None
 
-
-    # Convert the trips to the right format
-    for raw_trip in raw_trips:
-        trips_converted.append(convert_trip_stats(raw_trip=raw_trip))
-
-    return trips_converted
-
+    else:
+        return convert_trip_stats(raw_trip=raw_trip)
+    
         
 
 
-
-
-
-
-    
 
 init_db(TRIPS_DATABASE)
 
@@ -179,14 +203,24 @@ def cycling_page():
 
     cursor = get_db(TRIPS_DATABASE).cursor()
 
-    trips_formatted = get_all_trips_with_main_images(cursor=cursor)
+    trips_overview = get_all_trips_with_main_images(cursor=cursor)
 
-    return render_template('cycling_page.html', trips_formatted = trips_formatted)
+    return render_template('cycling_page.html', trips_overview = trips_overview)
 
+
+@app.route('/trip/<int:trip_id>')
+
+def trip_page(trip_id : int):
+    '''Renders one trip's page with stats, photos, a map etc.'''
+    cursor = get_db(TRIPS_DATABASE).cursor()
+
+    trip_data = get_trip_info(cursor=cursor, trip_id=trip_id)
+
+    return render_template('trip_page.html', trip = trip_data)
 
 @app.teardown_appcontext
 def close_connection(exception):
-    # Closes the connection to the database when the request is over
+    ''' Closes the connection to the database when the request is over '''
     for attr in list(g.__dict__.keys()):
         if attr.startswith('_db_'):
             db = getattr(g, attr)

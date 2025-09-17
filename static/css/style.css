@@ -272,9 +272,17 @@ video{
 /* ------------------------------------------- */
 
 #map { 
-    height: 50rem;
+    width: 50rem;
     aspect-ratio: 1;
     z-index: 0;
+}
+
+
+/* Temporary trip page css */
+
+.trip_page_contents{
+    padding-top: 5rem;
+    display: flex;
 }
 
 

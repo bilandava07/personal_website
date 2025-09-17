@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block leaflet %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""></script>
+
+<!-- Leaflet Providers Plugin -->
+<script src="https://unpkg.com/leaflet-providers@1.13.0/leaflet-providers.js"></script>
+
+
+{% endblock %}
+
+
+{% block body_class %}trip_page{% endblock %}
+
+
+{% block body %}
+
+
+
+<div class="trip_page_contents">
+    
+    <h2> {{ trip.trip_name }}</h2>
+
+    <img src="{{ url_for('static', filename='images/' + trip.image_filename) }}">
+
+    <div>
+            <p>ID: {{trip.trip_id}}</p>
+            <p>Start time: {{trip.start_date_time_formatted}}</p>
+
+            <p>Distance: {{trip.distance_km}}<p>
+            <p>Avg: {{trip.avg_speed_kmh}} km/h </p>
+            <p>Max:  {{trip.max_speed_kmh}}</p>
+    </div>
+    <div>
+
+            <p>Total time: {{trip.total_time_formatted}}</p>
+            <p>Moving time: {{trip.moving_time_formatted}}</p>
+            <p> GeoJSON filename: {{trip.geojson_filename}}</p>
+    </div>
+
+    <div id="map" data-geojson="{{ trip.geojson_filename }}"></div>
+
+        
+</div>
+
+
+{% endblock %}
+
+
+
+
+{% block extra_js %}
+
+<script src="/static/js/leaflet_script.js"></script>
+
+{% endblock %}
