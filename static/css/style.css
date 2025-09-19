@@ -6,7 +6,7 @@
     /* --text-color: #0b328e; */
     --text-color: black;
     --accent-color: #E8175D;
-    overflow-y: scroll;
+    scrollbar-width: none;
 }
 
 
@@ -59,8 +59,8 @@ body
     display: flex;
     justify-content: space-between;
     padding: 0.7em 3em 0.7em 5em;
-    background-color: var(--secondary-bg-color);
-    /* transition: background-color 0.3s ease, color 0.3s ease; */
+    transition: background-color 0.2s ease, color 0.2s ease;
+    z-index: 20;
 
 }
 
@@ -189,7 +189,7 @@ video{
 /*================================== */
 /*========Cycling page stuff=========== */
 
-.cycling_hero {
+#cycling_hero {
     position: relative;       
     height: 100vh;             
     width: 100%;
@@ -201,16 +201,28 @@ video{
 
 }
 
-.cycling-page .navbar_container {
+/* .cycling-page .navbar_container {
 
     background-color: transparent;
     backdrop-filter: blur(2rem);
     z-index: 20;
+} */
+
+.navbar_container.hero_active {
+    background-color: transparent;
+    color: white;
+}
+
+.navbar_container:not(.hero_active) {
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+    
+
 }
 
 
 
-.cycling_hero_content{
+#cycling_hero_content{
     /* border: 8px solid red; */
     height: 100vh;
     display: flex;
@@ -220,6 +232,10 @@ video{
     padding-right: 10%;
     padding-top: 10vh;
     
+}
+
+#cycling_hero_content * {
+    color: white !important;
 }
 
 #cycling_hero_text_block{
@@ -238,14 +254,14 @@ video{
     height: auto;
     fill: white;
 
-    transition: fill 1s ease;
+    transition: fill 0.3s ease;
     animation: bounce 4s infinite;
     transform-origin: center bottom;
 
 }
 
 #cycling_hero_arrow{
-    transition: transform 1s ease;
+    transition: transform 0.4s ease;
 }
 
 #cycling_hero_arrow:hover{
@@ -285,5 +301,15 @@ video{
     display: flex;
 }
 
+.scroll_snap_sections {
+    overflow-y: visible;
+    height: 100vh;
+}
+
+#trips_overview {
+    padding-top: var(--navbar-height);
+    height: auto;
+    overflow: visible;
+}
 
 
