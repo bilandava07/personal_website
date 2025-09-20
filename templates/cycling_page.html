@@ -4,7 +4,7 @@
 
 {% block body_class %}cycling-page{% endblock %}
 
-{% block body %}
+{% block content %}
 
  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -17,9 +17,9 @@
                         <div id="cycling_hero_text_block">
 
                                 <p>
-                                        Ever since I came to Munich I was fascinated by the bicycle infrastructure and fast,
-                                        cool-looking road bikes. I knew right away that I would have to try riding one
-                                        myself. On this page you can take a look at all the trips I have done in the last  years.
+                                        Ever since I came to Munich I was fascinated by the cycling cultrure and fast,
+                                        cool-looking road bikes. I knew right away that I had to try riding one
+                                        myself. On this page you can take a look at all the trips I have done in the last years.
                                 </p>
                         
 
@@ -47,24 +47,20 @@
 
         <section id="trips_overview">
                 
-                <ul>
-                        {% for trip in trips_overview %}
+                {% for trip in rides %}
+                <a href="{{ url_for('trip_page', trip_id = trip.trip_id) }}"> 
+                        <div class="trip_card">
                         
-                        <div>
                                 
-                                <h2> {{ trip.trip_name }}</h2>
-                                
-                                <a href="{{ url_for('trip_page', trip_id = trip.trip_id) }}"> 
-                                        <img src="{{ url_for('static', filename='images/' + trip.image_filename) }}">
-                                </a>
+                                <img class="trip_card_img" src="{{ url_for('static', filename='images/' + trip.image_filename) }}">
                                 
                                 
-                                
-                                
+                                <div class="trip_card_text"> {{ trip.trip_name }}</div>
                                 
                         </div>
-                        {% endfor %}
-                </ul>
+                </a>
+
+                {% endfor %}
         </section>
         
 </div>
