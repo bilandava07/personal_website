@@ -6,7 +6,12 @@
     /* --text-color: #0b328e; */
     --text-color: black;
     --accent-color: #E8175D;
+
+    --cards-border-radius: 5%;
     scrollbar-width: none;
+    box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -89,7 +94,8 @@ body
     margin-right: 1em;
 }
 
-.navlist li a{
+.navlist li a,
+.navlist_hamburger li a{
     text-decoration: none;
     color: inherit;
     display: inline-block;
@@ -99,18 +105,111 @@ body
 
 
 
-.navlist li a:hover
+.navlist li a:hover,
+.navlist_hamburger li a:hover
 {
     color: var(--highlight-color);
     transform: scale(1.04);
-   transition: color 0.3s, transform 0.3s;
+    transition: color 0.3s, transform 0.3s;
 }
 
-#theme_switch
+
+aside {
+
+    height: calc(100vh - var(--navbar-height));
+    top: var(--navbar-height);
+    right: 0;
+    align-self: start;
+    position: fixed;
+    z-index: 35;
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+
+    justify-self: end;
+
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out, background-color 0.2s ease, color 0.2s ease;
+}
+
+#sidebar_toggle{
+    display: none;
+    margin: 1em;
+    position: relative;
+    border: solid transparent;
+    border-radius: 30%;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+#sidebar_toggle svg{
+    width: 2rem;     
+    height: 2rem;
+    aspect-ratio: 1/1;
+    fill: currentColor;
+
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s; /* smooth scaling */
+}
+
+
+#sidebar_toggle:hover svg {
+    transform: scale(1.08); /* 20% larger on hover */
+}
+
+#sidebar_toggle::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--secondary-bg-color);
+    opacity: 0;
+    transition: opacity 0.5s;
+    border-radius: 30%;
+    z-index: 0;
+}
+
+
+#sidebar_toggle:hover::after
 {
-
-    margin: auto 0 auto auto;
+    opacity: 1;
 }
+
+
+@media(max-width: 900px) {
+    .page_grid{
+        grid-template-columns: 1fr;
+    }
+
+    aside {
+        width: 40vw;
+    }
+
+    .show_sidebar {
+        display: block;
+        transform: translateX(0);
+    }
+
+    #sidebar_toggle{
+        display: block;
+    }
+
+    .navlist {
+        display: none;
+    }
+
+    .navlist_hamburger{
+        font-size: 1.4rem;
+        padding: 0;
+        gap: 1em;
+        margin: 1em 2em auto 1em;
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+    }
+
+}
+
+
 
 #my_name
 {
@@ -126,18 +225,19 @@ body
 }
 
 /*================================== */
-/* Theme switch stuff */
+/* Theme switch + hamburger toggel stuff */
 
 #theme_switch
 {
     position: relative;
-    background-color: var(--background-color);
     border: solid transparent;
     width: 2.5rem;
     height: 2.5rem;
     aspect-ratio: 1/1;
     border-radius: 30%;
     color: var(--text-color);
+    background-color: var(--background-color);
+    margin: auto 0 auto auto;
 
 }
 
@@ -178,11 +278,9 @@ body
 
 
 
-video{
-    width: 50%;
-    height: auto;
-    padding: 0 0 0 25%;
-}
+
+
+
 
 
 
@@ -201,14 +299,11 @@ video{
 
 }
 
-/* .cycling-page .navbar_container {
 
-    background-color: transparent;
-    backdrop-filter: blur(2rem);
-    z-index: 20;
-} */
 
+/* Makes excpetions for the hero page for navbar and sidbar  */
 .navbar_container.hero_active {
+    backdrop-filter: blur(5px);
     background-color: transparent;
     color: white;
 }
@@ -216,9 +311,20 @@ video{
 .navbar_container:not(.hero_active) {
     background-color: var(--secondary-bg-color);
     color: var(--text-color);
-    
-
 }
+
+#sidebar.hero_active {
+    backdrop-filter: blur(8px);
+    background-color: rgba(0,0,0,0);
+    color: white;
+}
+
+#sidebar:not(.hero_active) {
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+}
+
+
 
 
 
@@ -230,7 +336,7 @@ video{
     justify-content: center;
     align-items: flex-end;
     padding-right: 10%;
-    padding-top: 10vh;
+    padding-top: clamp(5clamp(2rem, 10vh, 10rem);rem, 8vh, 10rem);;
     
 }
 
@@ -239,13 +345,14 @@ video{
 }
 
 #cycling_hero_text_block{
-    width: 35%;
+    width: clamp(250px, 35%, 600px); /* min, preferred, max width */
+    gap: clamp(2rem, 8vh, 10rem);
     height: auto;
-    font-size: 2.2rem;
+    font-size: clamp(1.3rem, 1.5vw, 3rem);
+    font-weight: lighter;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20vh;
     
 }
 
@@ -303,13 +410,88 @@ video{
 
 .scroll_snap_sections {
     overflow-y: visible;
-    height: 100vh;
+    height: auto;
 }
 
-#trips_overview {
-    padding-top: var(--navbar-height);
-    height: auto;
-    overflow: visible;
+.scroll_snap_sections section{
+    height: 100vh;
+    min-height: 100vh;
 }
+
+
+/* Trips cards CSS */
+
+#trips_overview {
+    padding-top: calc(var(--navbar-height) + 3%);
+    padding-left: min(50px, 5%);
+    padding-right: min(50px, 5%);
+    height: auto;
+    justify-content: center;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(300px, 20vw, 400px), 1fr));
+    grid-template-rows: min-content;
+
+    align-items: start;
+    gap: clamp(10px, 2vw, 30px);
+}
+
+
+
+.trip_card{
+    position: relative;
+    text-align: start;
+    display: block;
+    height: auto;
+    padding: 0;
+    overflow: hidden;
+
+    background-color: red;
+    border-radius: var(--cards-border-radius);
+
+    aspect-ratio: 4 / 3;
+}
+
+
+
+.trip_card_text{
+
+    font-size: clamp(1rem, 2.5vw, 2rem);
+    position: absolute;   /* overlay on top of image */
+    bottom: 0;       
+    left: 0;
+    width: 100%;
+    color: white;
+    box-sizing: border-box;
+    padding: 3em 0.5em 0.5em 0.5em ;
+    background: linear-gradient(
+        to top,
+        hsla(0, 0%, 0%, 1), /* black with 70% opacity */
+        hsla(0, 0%, 0%, 0)    /* transparent */
+    );
+}
+
+
+.trip_card_img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* scales image to cover card without distortion */
+    display: block;
+}
+
+
+
+
+/* Full page grid */
+
+.page_grid{
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+
+    min-height: 100vh;
+}
+
+
+
 
 
