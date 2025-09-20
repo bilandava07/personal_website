@@ -6,9 +6,11 @@ let isScrolling = false;
 function updateNavbar() {
   let heroBottom = hero.offsetTop + hero.offsetHeight;
   if (window.scrollY < heroBottom) {
-    navbar.classList.add('hero_active'); // still on hero
+    navbar.classList.add('hero_active');
+    sidebar.classList.add('hero_active'); // still on hero
   } else {
-    navbar.classList.remove('hero_active'); // past hero
+    navbar.classList.remove('hero_active');
+    sidebar.classList.remove('hero_active') // past hero
   }
 }
 updateNavbar();
