@@ -446,7 +446,6 @@ body
     padding: 0;
     overflow: hidden;
 
-    background-color: red;
     border-radius: var(--cards-border-radius);
 
     aspect-ratio: 4 / 3;
