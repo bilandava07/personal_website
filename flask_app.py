@@ -203,9 +203,9 @@ def cycling_page():
 
     cursor = get_db(TRIPS_DATABASE).cursor()
 
-    trips_overview = get_all_trips_with_main_images(cursor=cursor)
+    rides_previews = get_all_trips_with_main_images(cursor=cursor)
 
-    return render_template('cycling_page.html', trips_overview = trips_overview)
+    return render_template('cycling_page.html', rides = rides_previews)
 
 
 @app.route('/trip/<int:trip_id>')
