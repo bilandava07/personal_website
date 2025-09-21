@@ -406,6 +406,7 @@ body
 .trip_page_contents{
     padding-top: 5rem;
     display: flex;
+    flex-direction: column;
 }
 
 .scroll_snap_sections {
