@@ -29,3 +29,8 @@ copy_media_to_deployment.sh
 
 
 .vscode/settings.json
+
+static/geo_json
+
+
+trips.db
