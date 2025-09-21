@@ -191,13 +191,23 @@ def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
     converted_trip["images"] : list[dict] = []
     for trip_image in trip_images:
 
+        if trip_image["image_width"] > trip_image["image_height"]:
+            photo_class = "wide"
+
+        elif trip_image["image_height"] > trip_image["image_width"]:
+            photo_class = "tall"
+        else:
+            photo_class = "square"
+
         trip_image_dict = {
             "image_id" : trip_image["image_id"],
             "trip_id" : trip_image["trip_id"],
             "image_filename" : trip_image["image_filename"],
             "is_main" : trip_image["is_main"],
             "image_width" : trip_image["image_width"],
-            "image_height" : trip_image["image_height"]
+            "image_height" : trip_image["image_height"],
+            "photo_class" : photo_class
+
         }
 
         converted_trip["images"].append(trip_image_dict)
