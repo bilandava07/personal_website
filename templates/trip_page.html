@@ -19,7 +19,7 @@ crossorigin=""></script>
 {% block body_class %}trip_page{% endblock %}
 
 
-{% block body %}
+{% block content %}
 
 
 
@@ -41,7 +41,6 @@ crossorigin=""></script>
 
             <p>Total time: {{trip.total_time_formatted}}</p>
             <p>Moving time: {{trip.moving_time_formatted}}</p>
-            <p> GeoJSON filename: {{trip.geojson_filename}}</p>
     </div>
 
     <div id="map" data-geojson="{{ trip.geojson_filename }}"></div>
