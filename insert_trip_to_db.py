@@ -5,6 +5,7 @@ from datetime import datetime
 import sqlite3
 from zoneinfo import ZoneInfo
 from fitparse import FitFile
+from PIL import Image
 
 
 def add_image_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, is_main : int | None) -> bool:
@@ -31,6 +32,11 @@ def add_image_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, is_main : in
         else:
             print('File does not exist on the disk! File should exist in [static/images/img_name.jpeg]')
 
+    # Figure out the dimensions of the image
+
+    image_file = Image.open(full_path)
+
+    image_width, image_height = image_file.size
 
 
 
@@ -47,21 +53,25 @@ def add_image_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, is_main : in
                     is_main = 0
                     break
 
-    insert_statement = '''INSERT INTO trips_images (trip_id, image_filename, is_main) VALUES (?,?,?)'''
 
-    cursor.execute(insert_statement, (trip_id, image_path, is_main))
+    insert_statement = '''
+            INSERT INTO trips_images
+            (trip_id, image_filename, is_main, image_width, image_height)
+            VALUES (?,?,?,?,?)
+            '''
+
+    cursor.execute(insert_statement, (trip_id, image_path, is_main, image_width, image_height))
 
 
-def test_querry_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
+def test_query_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
     '''
     Querries the database for the newly added ID to check if it was added successfully
     Prompts user to confirm if the row was added successfully or not 
     '''
+    query = ''' SELECT * from trips WHERE trip_id = ?'''
 
-    querry = ''' SELECT * from trips LEFT JOIN trips_images USING (trip_id) WHERE trips.trip_id = ?'''
 
-    cursor.execute(querry, (row_id,))
-    newly_added_trip = dict(cursor.fetchone())
+    newly_added_trip = dict(cursor.execute(query, (row_id,)).fetchone())
 
     # Print out the values for checking purposes
     print("The last row added:")
@@ -242,24 +252,34 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     newly_added_trip_id = cursor.lastrowid
 
 
-    adding_images = True
+    adding_main_image = True
 
-    while adding_images:
+    while adding_main_image:
         add_main_img_input = input("Add main image to the trip? [y/n]\n")
         if isinstance(add_main_img_input, str):
             if add_main_img_input.lower() == 'y':
                 add_image_to_trip(cursor=cursor, trip_id=newly_added_trip_id, is_main=1)
-
-                # TODO: Add other regular images loop 
-                # (maybe image paths separated by commas and then split on comma list)
-                break
-
+                adding_main_image = False
 
             elif add_main_img_input.lower() == 'n':
-                adding_images = False
+                adding_main_image = False
+
+
+    adding_other_images = True
+
+    while adding_other_images:
+        add_more_images = input("Add another image? [y/n]\n")
+        if isinstance(add_more_images, str):
+            if add_more_images.lower() == 'y':
+                add_image_to_trip(cursor=cursor, trip_id=newly_added_trip_id, is_main=0)
+
+            elif add_more_images.lower() == 'n':
+                adding_other_images = False
+
+
             
     # Test if the row was added correctly
-    successfully_added = test_querry_id(cursor=cursor, row_id=cursor.lastrowid)
+    successfully_added = test_query_id(cursor=cursor, row_id=newly_added_trip_id)
 
 
     if successfully_added:
@@ -282,10 +302,10 @@ if __name__ == '__main__':
 
     try:
         insert_trip_to_db(connection=connection, cursor=cursor)
-    except Exception as e:
-        if connection:
-            connection.rollback()
-        print("Error: ", e)
+    # except Exception as e:
+    #     if connection:
+    #         connection.rollback()
+    #     print("Error: ", e)
 
     finally:
         if connection:

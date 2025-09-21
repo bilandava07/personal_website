@@ -48,6 +48,8 @@ def init_db(db_name):
                 trip_id INTEGER NOT NULL,
                 image_filename TEXT NOT NULL,
                 is_main BOOLEAN DEFAULT 0,
+                image_width INT NOT NULL,
+                image_height INT NOT NULL,
                 FOREIGN KEY (trip_id)  REFERENCES trips(trip_id)
             )
         ''')
@@ -55,7 +57,8 @@ def init_db(db_name):
         connection.commit()
 
 def convert_trip_stats(raw_trip) -> dict:
-    # Converts trip's values to the right format for presentation on the frontend
+    ''' Converts trip's values to the right format for presentation on the frontend '''
+
     avg_speed_kmh = round(raw_trip['avg_speed'] * 3.6, 1)
     max_speed_kmh = round(raw_trip['max_speed'] * 3.6, 1)
 
@@ -102,12 +105,7 @@ def convert_trip_stats(raw_trip) -> dict:
         "paused_time_formatted" : paused_time_formatted,
         "total_ascent" : raw_trip['total_ascent'],
         "total_descent" : raw_trip['total_descent'],
-        "geojson_filename" : raw_trip['geojson_filename'],
-    
-        "image_id" : raw_trip["image_id"],
-        "image_filename" : raw_trip["image_filename"],
-        "is_main" : raw_trip["is_main"]
-        
+        "geojson_filename" : raw_trip['geojson_filename']
     }
 
 
@@ -153,7 +151,7 @@ def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
     Querries the database for one specific trip by ID to
     then display it on the trip_page'''
 
-    querry = '''
+    trip_querry = '''
         SELECT   
             trips.trip_id,
             trips.trip_name,
@@ -165,25 +163,46 @@ def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
             trips.moving_time,
             trips.total_ascent,
             trips.total_descent,
-            trips.geojson_filename,
-            trips_images.image_id,
-            trips_images.image_filename,
-            trips_images.is_main
+            trips.geojson_filename
         FROM trips
-        LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
-        AND trips_images.is_main = 1
         WHERE trips.trip_id = ?
     '''
-    raw_trip = cursor.execute(querry, (trip_id,)).fetchone()
+    raw_trip = cursor.execute(trip_querry, (trip_id,)).fetchone()
 
     if raw_trip is None:
         return None
-
     else:
-        return convert_trip_stats(raw_trip=raw_trip)
-    
-        
+        converted_trip = convert_trip_stats(raw_trip=raw_trip)
 
+    images_querry = '''
+        SELECT
+            i.image_id, 
+            i.trip_id, 
+            i.image_filename, 
+            i.is_main,
+            i.image_width, 
+            i.image_height
+        FROM trips_images as i
+        WHERE i.trip_id = ?
+    '''
+
+    trip_images = cursor.execute(images_querry, (trip_id,)).fetchall()
+
+    converted_trip["images"] : list[dict] = []
+    for trip_image in trip_images:
+
+        trip_image_dict = {
+            "image_id" : trip_image["image_id"],
+            "trip_id" : trip_image["trip_id"],
+            "image_filename" : trip_image["image_filename"],
+            "is_main" : trip_image["is_main"],
+            "image_width" : trip_image["image_width"],
+            "image_height" : trip_image["image_height"]
+        }
+
+        converted_trip["images"].append(trip_image_dict)
+
+    return converted_trip
 
 
 init_db(TRIPS_DATABASE)
