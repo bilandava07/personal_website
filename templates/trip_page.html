@@ -27,7 +27,6 @@ crossorigin=""></script>
     
     <h2> {{ trip.trip_name }}</h2>
 
-    <img src="{{ url_for('static', filename='images/' + trip.image_filename) }}">
 
     <div>
             <p>ID: {{trip.trip_id}}</p>
@@ -45,6 +44,21 @@ crossorigin=""></script>
 
     <div id="map" data-geojson="{{ trip.geojson_filename }}"></div>
 
+    <div class="trip_photos_grid">
+
+
+        {% for image in trip.images %}
+        
+
+        <img class="trip_photo_card_{{ image.photo_class }}" 
+        src="{{ url_for('static', filename='images/' + image.image_filename) }}">
+
+
+
+
+        {% endfor %}
+
+    </div>
         
 </div>
 
