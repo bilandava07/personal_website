@@ -6,61 +6,53 @@ import sqlite3
 from zoneinfo import ZoneInfo
 from fitparse import FitFile
 from PIL import Image
+import shutil
 
 
-def add_image_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, is_main : int | None) -> bool:
+def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_in_dir : list[str], full_path_to_dir: str) -> bool:
     '''
-    Promts the user for the image path of the image to be inserted to the trip
-    inserts the image to the trips_images table 
+    Prompts the user for the path to the directory with images and then adds them to the trip
     '''
 
-    if not trip_id:
-        # Prompt the user for trip_id if the function is being used to manually
-        # add an image to an already existing trip 
-        trip_id = input("ID of the trip the image is being added to: ")
 
-    while True:
 
-        image_path = input("Name of the image to be added: ")
+    valid_extensions= ('.jpeg', '.jpg', '.png')
 
-        # Join the folder path and the filename
-        full_path = os.path.join('static', 'images', image_path)
+    images_to_add : list[str] = []
 
-        if os.path.isfile(full_path):
-            print("File exists. Safe to insert")
-            break
+    # Only add images 
+    for file in all_files_in_dir:
+        if file.lower().endswith(valid_extensions):
+            images_to_add.append(file)
         else:
-            print('File does not exist on the disk! File should exist in [static/images/img_name.jpeg]')
+            print("Not an image, skipping... ")
 
-    # Figure out the dimensions of the image
+    for image_filename in images_to_add:
+        if image_filename.lower().startswith('main'):
+            is_main = 1
+        else:
+            is_main = 0
 
-    image_file = Image.open(full_path)
+        full_path = os.path.join(full_path_to_dir, image_filename)
 
-    image_width, image_height = image_file.size
+        project_images_dir = '/Users/dava/Projects/web_dev/my_website/static/images'
 
+        dest_path = os.path.join(project_images_dir, image_filename)
 
-
-    if is_main not in (1, 0, None):
-        # Prompt the user for the is_main attribute
-        while True:
-            is_main = input("Is the picture the main of the trip? [y/n]")
-
-            if isinstance(is_main, str):
-                if is_main.lower() == 'y':
-                    is_main = 1
-                    break
-                elif is_main.lower() == 'n':
-                    is_main = 0
-                    break
+        shutil.copy(full_path, dest_path)
 
 
-    insert_statement = '''
-            INSERT INTO trips_images
-            (trip_id, image_filename, is_main, image_width, image_height)
-            VALUES (?,?,?,?,?)
-            '''
+        # Figure out the dimensions of the image
+        image_file = Image.open(full_path)
+        image_width, image_height = image_file.size
 
-    cursor.execute(insert_statement, (trip_id, image_path, is_main, image_width, image_height))
+        insert_statement = '''
+                INSERT INTO trips_images
+                (trip_id, image_filename, is_main, image_width, image_height)
+                VALUES (?,?,?,?,?)
+                '''
+
+        cursor.execute(insert_statement, (trip_id, image_filename, is_main, image_width, image_height))
 
 
 def test_query_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
@@ -69,7 +61,6 @@ def test_query_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
     Prompts user to confirm if the row was added successfully or not 
     '''
     query = ''' SELECT * from trips WHERE trip_id = ?'''
-
 
     newly_added_trip = dict(cursor.execute(query, (row_id,)).fetchone())
 
@@ -92,25 +83,56 @@ def test_query_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
 
 def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     '''
-    Inserts the trip to the database after parsing the .fit file 
+    Inserts the trip along with its images to the database after parsing the .fit file 
     and converting all values to the appropriate format
     '''
 
-    # fitfile = FitFile('rides_fit/' + input("Name of the fit file to parse and get data from: "))
+    # Prompt for the absolute path of the directory with images and .fit file
+    while True:
 
-    # Testing file to avoid having to paste the name everytime
-    fitfile = FitFile('rides_fit/' + "2025-09-12-160814-ELEMNT ROAM B53E-57-0.fit")
+        full_path_to_dir = input("Full absolute path to the directory with images and .fit file of the trip to add: ").strip('\'')
+
+        if os.path.isdir(full_path_to_dir):
+            print("Directory exists. Safe to insert")
+            break
+        else:
+            print('Directory was not found! Check the path.')
+
+    # Find the .fit file in the directory
+    all_files_in_dir = os.listdir(full_path_to_dir)
+
+    fitfile = None
+    for file in all_files_in_dir:
+        if file.lower().endswith('.fit'):
+            path_to_fit_file = os.path.join(full_path_to_dir, file)
+            fitfile = FitFile(path_to_fit_file)
+
+    if fitfile is None:
+        raise Exception("No .fit file found in the directory!")
+
 
     # Prompt the user for the name of the trip
     confirmed = False
 
     while not confirmed:
-        name = input("What should the name for this ride be: ")
+        name = input("What should the NAME for this ride be: ")
 
-        confirm = input(f"Name: {name}\nAre you sure this is the name you want to use? [y]\n")
+        confirm = input(f"Name: {name}\nAre you sure this is the NAME you want to use? [y]\n")
 
         if confirm.lower() == 'y':
             confirmed = True
+
+    # Prompt the user for description of the ride
+    confirmed = False
+
+    while not confirmed:
+        description = input("What should the DESCRIPTION for this ride be: ")
+
+        confirm = input(f"Description: {description}\nAre you sure this is the DESCRIPTION you want to use? [y]\n")
+
+        if confirm.lower() == 'y':
+            confirmed = True
+
 
     # Parses the .fit file and returns a readable json with name and values of the fit fields
     for session in fitfile.get_messages('session'):
@@ -217,6 +239,7 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     # Store all the needed data in a tuple for insertion
     ride_values_to_insert = (
         name,
+        description,
         start_time_str,
         avg_speed,
         max_speed,
@@ -242,9 +265,9 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     # Insert the tuple into the database
 
     insert_statement = ''' INSERT INTO trips 
-                    (trip_name, start_time, avg_speed, max_speed, distance, total_time, moving_time,
+                    (trip_name, trip_description, start_time, avg_speed, max_speed, distance, total_time, moving_time,
                     total_ascent, total_descent, geojson_filename)
-                    VALUES (?,?,?,?,?,?,?,?,?,?)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?)
                     '''
 
     cursor.execute(insert_statement, ride_values_to_insert)
@@ -252,31 +275,8 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     newly_added_trip_id = cursor.lastrowid
 
 
-    adding_main_image = True
-
-    while adding_main_image:
-        add_main_img_input = input("Add main image to the trip? [y/n]\n")
-        if isinstance(add_main_img_input, str):
-            if add_main_img_input.lower() == 'y':
-                add_image_to_trip(cursor=cursor, trip_id=newly_added_trip_id, is_main=1)
-                adding_main_image = False
-
-            elif add_main_img_input.lower() == 'n':
-                adding_main_image = False
-
-
-    adding_other_images = True
-
-    while adding_other_images:
-        add_more_images = input("Add another image? [y/n]\n")
-        if isinstance(add_more_images, str):
-            if add_more_images.lower() == 'y':
-                add_image_to_trip(cursor=cursor, trip_id=newly_added_trip_id, is_main=0)
-
-            elif add_more_images.lower() == 'n':
-                adding_other_images = False
-
-
+    # Add images to the trip
+    add_images_to_trip(cursor=cursor, trip_id=newly_added_trip_id, all_files_in_dir=all_files_in_dir, full_path_to_dir=full_path_to_dir)
             
     # Test if the row was added correctly
     successfully_added = test_query_id(cursor=cursor, row_id=newly_added_trip_id)
