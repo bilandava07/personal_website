@@ -203,7 +203,7 @@ def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
             "image_id" : trip_image["image_id"],
             "trip_id" : trip_image["trip_id"],
             "image_filename" : trip_image["image_filename"],
-            "is_main" : trip_image["is_main"],
+            "is_main" : bool(trip_image["is_main"]),
             "image_width" : trip_image["image_width"],
             "image_height" : trip_image["image_height"],
             "photo_class" : photo_class
@@ -245,7 +245,13 @@ def trip_page(trip_id : int):
 
     trip_data = get_trip_info(cursor=cursor, trip_id=trip_id)
 
-    return render_template('trip_page.html', trip = trip_data)
+    for image in trip_data["images"]:
+        if image["is_main"]:
+            main_image = image
+
+    regular_images = [img for img in trip_data["images"] if not img["is_main"]]
+
+    return render_template('trip_page.html', trip = trip_data, main_image = main_image, regular_images = regular_images )
 
 @app.teardown_appcontext
 def close_connection(exception):
