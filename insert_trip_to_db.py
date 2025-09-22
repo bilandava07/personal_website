@@ -102,14 +102,27 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     all_files_in_dir = os.listdir(full_path_to_dir)
 
     fitfile = None
+    description_file = None
     for file in all_files_in_dir:
         if file.lower().endswith('.fit'):
             path_to_fit_file = os.path.join(full_path_to_dir, file)
             fitfile = FitFile(path_to_fit_file)
+        
+        if file.lower().startswith('description'):
+            description_file = os.path.join(full_path_to_dir, file)
 
     if fitfile is None:
         raise Exception("No .fit file found in the directory!")
+    
+    if description_file is None:
+        raise Exception("No description file found in the directory!")
+    
 
+    # Read the description file 
+
+    with open(description_file, 'r', encoding='utf-8') as file:
+        description = file.read().strip()
+    
 
     # Prompt the user for the name of the trip
     confirmed = False
@@ -122,16 +135,6 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
         if confirm.lower() == 'y':
             confirmed = True
 
-    # Prompt the user for description of the ride
-    confirmed = False
-
-    while not confirmed:
-        description = input("What should the DESCRIPTION for this ride be: ")
-
-        confirm = input(f"Description: {description}\nAre you sure this is the DESCRIPTION you want to use? [y]\n")
-
-        if confirm.lower() == 'y':
-            confirmed = True
 
 
     # Parses the .fit file and returns a readable json with name and values of the fit fields
@@ -310,7 +313,6 @@ if __name__ == '__main__':
     finally:
         if connection:
             connection.close()
-
 
 
 
