@@ -565,6 +565,8 @@ body
     height: 100%; 
     object-fit: cover; 
     display: block;
+
+    z-index: 0;
     
 }
 
