@@ -336,7 +336,7 @@ body
     justify-content: center;
     align-items: flex-end;
     padding-right: 10%;
-    padding-top: clamp(5clamp(2rem, 10vh, 10rem);rem, 8vh, 10rem);;
+    padding-top: clamp(5clamp(2rem, 10vh, 10rem);rem, 8vh, 10rem);
     
 }
 
@@ -467,6 +467,29 @@ body
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Trip page CSS */
 
 .trip_page_main{
@@ -482,7 +505,6 @@ body
     justify-self: center;
 
 
-
     grid-template-columns: minmax(0, 40vw) minmax(0, 40vw);
     /* grid-template-rows: repeat(2, calc(100vh - var(--navbar-height))); */
     grid-template-rows: auto auto;
@@ -491,8 +513,8 @@ body
 
 
     grid-template-areas: 
-    "main_image name_description"
-    "stats map";
+    "main_image map"
+    "stats name_description";
 }
 
 
@@ -524,13 +546,10 @@ body
 }
 
 
-
 /* Leaflet map stuff */
 
 .trip_map_div{
     grid-area: map;
-
-    margin-top: 2rem;
 
     box-sizing: border-box;
 
@@ -540,7 +559,8 @@ body
     aspect-ratio: 4/3;
     overflow: hidden;
     width: 100%;
-    max-height: 40vh;
+    max-height: 45vh;
+    border-radius: var(--cards-border-radius);
     max-width: 100%;
 }
 
@@ -557,6 +577,7 @@ body
 
 .trip_name_description{
     grid-area:  name_description;
+    margin-top: 2rem;
 }
 
 .trip_date{
@@ -576,6 +597,7 @@ body
 
 .trip_description{
     margin: 1rem 0;
+    line-height: 1.3em;
     padding: 0;
     font-size: clamp(0.9rem, 1.3vw, 1.5rem);
     font-weight: 300;
