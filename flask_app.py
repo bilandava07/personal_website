@@ -30,6 +30,7 @@ def init_db(db_name):
             CREATE TABLE IF NOT EXISTS trips(
                 trip_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 trip_name TEXT NOT NULL,
+                trip_description TEXT NOT NULL,
                 start_time TEXT NOT NULL,
                 avg_speed FLOAT NOT NULL,
                 max_speed FLOAT NOT NULL,
@@ -95,6 +96,7 @@ def convert_trip_stats(raw_trip) -> dict:
     # Return formatted data ready to display on the frontend 
     return {
         "trip_name" : raw_trip["trip_name"],
+        "trip_description" : raw_trip["trip_description"],
         "trip_id" : raw_trip["trip_id"],
         "avg_speed_kmh" : avg_speed_kmh,
         "max_speed_kmh" : max_speed_kmh,
@@ -155,6 +157,7 @@ def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
         SELECT   
             trips.trip_id,
             trips.trip_name,
+            trips.trip_description,
             trips.start_time,
             trips.avg_speed,
             trips.max_speed,
