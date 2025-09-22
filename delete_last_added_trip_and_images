@@ -10,28 +10,42 @@ with sqlite3.connect("trips.db") as conn:
         cursor = conn.cursor()
 
         # Get the last trip_id
-        cursor.execute("SELECT trip_id FROM trips ORDER BY trip_id DESC LIMIT 1")
+        cursor.execute("SELECT * FROM trips ORDER BY trip_id DESC LIMIT 1")
         last_trip = cursor.fetchone()
-        
-        if last_trip:
-            trip_id = last_trip['trip_id']
 
+        last_trip_id = last_trip['trip_id']
+
+        gejson_filename = last_trip['geojson_filename']
+
+        path_to_geojson = os.path.join('./static/geo_json', gejson_filename)
+
+        if os.path.exists(path_to_geojson):
+            os.remove(path_to_geojson)
+
+        else:
+            print("Could not find the geojson file! Not deleted")
+        
+        if last_trip_id:
             # Get all image filenames to delete the files later
-            cursor.execute("SELECT image_filename FROM trips_images WHERE trip_id = ?", (trip_id,))
+            cursor.execute("SELECT image_filename FROM trips_images WHERE trip_id = ?", (last_trip_id,))
+
             image_files = [row['image_filename'] for row in cursor.fetchall()]
 
+
             # Delete images from DB
-            cursor.execute("DELETE FROM trips_images WHERE trip_id = ?", (trip_id,))
+            cursor.execute("DELETE FROM trips_images WHERE trip_id = ?", (last_trip_id,))
             # Delete trip from DB
-            cursor.execute("DELETE FROM trips WHERE trip_id = ?", (trip_id,))
+            cursor.execute("DELETE FROM trips WHERE trip_id = ?", (last_trip_id,))
 
             # Delete image files from disk
             for filename in image_files:
                 path = os.path.join('./static/images', filename)
                 if os.path.exists(path):
                     os.remove(path)
+                else:
+                    print("Could not find the image! Not deleted")
 
-            print(f"Trip {trip_id} and its images have been deleted.")
+            print(f"Trip {last_trip_id} and its images have been deleted.")
 
             conn.commit()
             
