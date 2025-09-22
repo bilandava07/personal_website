@@ -2,12 +2,10 @@
 
 {% block leaflet %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-crossorigin=""/>
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-crossorigin=""></script>
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <!-- Leaflet Providers Plugin -->
 <script src="https://unpkg.com/leaflet-providers@1.13.0/leaflet-providers.js"></script>
@@ -22,45 +20,106 @@ crossorigin=""></script>
 {% block content %}
 
 
-
-<div class="trip_page_contents">
-    
-    <h2> {{ trip.trip_name }}</h2>
+<div class="trip_page_main">
 
 
-    <div>
-            <p>ID: {{trip.trip_id}}</p>
-            <p>Start time: {{trip.start_date_time_formatted}}</p>
+        <div class="trip_page_contents_grid">
 
-            <p>Distance: {{trip.distance_km}}<p>
-            <p>Avg: {{trip.avg_speed_kmh}} km/h </p>
-            <p>Max:  {{trip.max_speed_kmh}}</p>
-    </div>
-    <div>
+                <div class="trip_main_image_div">
 
-            <p>Total time: {{trip.total_time_formatted}}</p>
-            <p>Moving time: {{trip.moving_time_formatted}}</p>
-    </div>
+                        <img id="trip_main_image"
+                                src="{{ url_for('static', filename='images/' + main_image.image_filename) }}">
 
-    <div id="map" data-geojson="{{ trip.geojson_filename }}"></div>
+                </div>
 
-    <div class="trip_photos_grid">
-
-
-        {% for image in trip.images %}
-        
-
-        <img class="trip_photo_card_{{ image.photo_class }}" 
-        src="{{ url_for('static', filename='images/' + image.image_filename) }}">
+                <div class="trip_name_description">
+                        <h1 class="trip_name"> {{ trip.trip_name }}</h1>
+                        <h4>Start time: {{trip.start_date_time_formatted}}</h4>
+                        <div class="trip_desription"> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maiores
+                                suscipit accusantium, nisi ratione qui voluptatibus animi et, repellat ipsam fugiat
+                                iusto! Esse quod distinctio omnis cumque consequatur in, nemo magnam eaque molestiae
+                                accusantium, ea facilis corrupti. Cum reprehenderit excepturi est, ex sit aperiam
+                                aliquam maxime saepe eligendi quidem repudiandae quia quaerat maiores blanditiis illum
+                                in ullam amet unde, esse voluptatibus magnam. Aperiam commodi autem ad optio a, quod
+                                natus itaque voluptates sit, quibusdam quos impedit et voluptate minus explicabo esse
+                                atque temporibus nulla rem consequatur eius cum accusamus quas ratione! Ad repellat
+                                voluptatem sit eveniet doloremque, explicabo adipisci quod excepturi. </div>
 
 
+                </div>
 
 
-        {% endfor %}
+                <div class="trip_stats">
 
-    </div>
-        
+                        <div class="distance_stats">
+
+                                <svg class="distance_stats_icon" viewBox="0 0 256 256">
+
+                                        <path
+                                                d="M127.99975,68a36,36,0,1,0,36,36A36.04062,36.04062,0,0,0,127.99975,68Zm0,64a28,28,0,1,1,28-28A28.03146,28.03146,0,0,1,127.99975,132Zm0-112a84.0953,84.0953,0,0,0-84,84c0,30.418,14.1709,62.793,40.98145,93.625a250.12015,250.12015,0,0,0,40.72461,37.65186,4,4,0,0,0,4.58789,0A250.12015,250.12015,0,0,0,171.01831,197.625c26.81054-30.832,40.98144-63.207,40.98144-93.625A84.0953,84.0953,0,0,0,127.99975,20Zm37.10352,172.23437a254.03965,254.03965,0,0,1-37.10352,34.80079,254.04027,254.04027,0,0,1-37.10351-34.80079C73.1521,171.7959,51.99975,139.89648,51.99975,104a76,76,0,0,1,152,0C203.99975,139.89648,182.84741,171.7959,165.10327,192.23437Z" />
+
+                                </svg>
+                                <p>Distance: {{trip.distance_km}} km</p>
+                                <p></p>
+                        </div>
+
+                        <div class="speed_stats">
+                                <svg class="speed_stats_icon" viewBox="-20 0 190 190">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M106.29 130.28C106.999 128.365 107.521 126.386 107.85 124.37L120.4 125.65C120.452 128.761 120.228 131.869 119.73 134.94L106.29 130.28ZM108.29 113.82L118.38 111.93C119.107 114.409 119.642 116.939 119.98 119.5L108.39 119.41C108.454 117.546 108.407 115.679 108.25 113.82H108.29ZM107.15 106.43C106.89 105.95 106.62 105.43 106.33 105L112.8 99.6801C114.073 101.643 115.19 103.702 116.14 105.84L107.63 109C107.48 108.1 107.31 107.25 107.11 106.43H107.15ZM81.98 109.55L98 95.4601C92.18 90.8801 84.66 88.0001 75.44 88.0001C44.61 88.0001 30 116.72 36.67 139L44.82 137.4L47.18 142.61L35.06 149.26C20.59 122.19 35.06 80.6201 75.58 80.6201C87.46 80.6201 96.97 84.2401 104.12 90.0201L109.23 85.5301L111.23 89.8701L90.92 118.3L81.98 109.55ZM75.19 114.48C90.71 114.48 90.61 138.19 75.46 138.19C58.82 138.19 59.57 114.48 75.15 114.48H75.19ZM118.33 141.28C117.482 144.151 116.367 146.937 115 149.6L98.46 140.74C100.808 139.13 102.786 137.036 104.26 134.6L118.33 141.28Z">
+                                        </path>
+                                </svg>
+                                <p>Avg: {{trip.avg_speed_kmh}} km/h </p>
+                                <p>Max: {{trip.max_speed_kmh}} km/h</p>
+
+                        </div>
+
+
+                        <div class="time_stats">
+                                <svg viewBox="0 0 100 100" class="time_stats_icon">
+                                        <path
+                                                d="M42 0a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h3v5.295C23.364 15.785 6.5 34.209 6.5 56.5C6.5 80.483 26.017 100 50 100s43.5-19.517 43.5-43.5a43.22 43.22 0 0 0-6.72-23.182l4.238-3.431l1.888 2.332a2 2 0 0 0 2.813.297l3.11-2.518a2 2 0 0 0 .294-2.812L89.055 14.75a2 2 0 0 0-2.813-.297l-3.11 2.518a2 2 0 0 0-.294 2.812l1.889 2.332l-4.22 3.414C73.77 18.891 64.883 14.435 55 13.297V8h3a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H42zm8 20c20.2 0 36.5 16.3 36.5 36.5S70.2 93 50 93S13.5 76.7 13.5 56.5S29.8 20 50 20zm.002 7.443L50 56.5l23.234 17.447a29.056 29.056 0 0 0 2.758-30.433a29.056 29.056 0 0 0-25.99-16.07z">
+                                        </path>
+                                </svg>
+                                <p>Total: {{trip.total_time_formatted}}</p>
+                                <p>Moving: {{trip.moving_time_formatted}}</p>
+                        </div>
+
+                        <div class="elevation_stats">
+                                <svg class="elevation_icon" fill="#000000" viewBox="0 0 24 24">
+                                        <path
+                                                d="M21.85,17.47l-5-8a1,1,0,0,0-1.7,0l-1,1.63L10.86,5.5a1,1,0,0,0-1.72,0l-7,12A1,1,0,0,0,3,19H21a1,1,0,0,0,.85-1.53ZM10.45,17H4.74L10,8l2.93,5Zm2.35,0L15,13.57h0L16,11.89,19.2,17Z" />
+                                </svg>
+
+                                <p>Ascent: {{trip.total_ascent}} m</p>
+                                <p>Descent: {{trip.total_descent}} m</p>
+                        </div>
+                </div>
+
+                <div class="trip_map_div">
+                        <div id="map" data-geojson="{{ trip.geojson_filename }}"></div>
+                </div>
+        </div>
+
+
+        <div class="trip_photos_grid">
+
+
+                {% for image in regular_images %}
+
+
+                <img class="trip_photo_card_{{ image.photo_class }}"
+                        src="{{ url_for('static', filename='images/' + image.image_filename) }}">
+
+
+
+
+                {% endfor %}
+
+        </div>
+
 </div>
+
 
 
 {% endblock %}
