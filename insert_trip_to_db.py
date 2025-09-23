@@ -28,9 +28,12 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
         else:
             print("Not an image, skipping... ")
 
+    main_image_exists = False
+
     for image_filename in images_to_add:
         if image_filename.lower().startswith('main'):
             is_main = 1
+            main_image_exists = True
         else:
             is_main = 0
 
@@ -54,6 +57,10 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
                 '''
 
         cursor.execute(insert_statement, (trip_id, image_filename, is_main, image_width, image_height))
+
+    if not main_image_exists:
+        raise Exception("No main image was found in the directory! Aborting")
+    
 
 
 def test_query_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
@@ -282,7 +289,7 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
         print("\nThe trip was commited to the database")
     else:
         connection.rollback()
-        print("\nInsert aborted, nothinb was saved to the database")
+        print("\nInsert aborted, nothing was saved to the database")
 
 if __name__ == '__main__':
     # Establish connectin to the database
@@ -293,10 +300,10 @@ if __name__ == '__main__':
 
     try:
         insert_trip_to_db(connection=connection, cursor=cursor)
-    # except Exception as e:
-    #     if connection:
-    #         connection.rollback()
-    #     print("Error: ", e)
+    except Exception as e:
+        if connection:
+            connection.rollback()
+        print("Error: ", e)
 
     finally:
         if connection:
