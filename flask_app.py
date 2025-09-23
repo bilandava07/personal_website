@@ -81,11 +81,7 @@ def convert_trip_stats(raw_trip) -> dict:
 
     # Convert to local timezone
     start_time_utc = datetime.fromisoformat(raw_trip['start_time'])
-    start_time_utc = start_time_utc.replace(tzinfo=ZoneInfo("UTC"))
-    local_tz = ZoneInfo("Europe/Berlin")  # change to your timezone
-    start_time_local = start_time_utc.astimezone(local_tz)
-    # Display format 
-    start_date_time_formatted = start_time_local.strftime("%d %B %Y at %H:%M")
+    start_date_time_formatted = start_time_utc.strftime("%d %B %Y at %H:%M")
 
 
     paused_seconds = raw_trip['total_time'] - raw_trip['moving_time']
