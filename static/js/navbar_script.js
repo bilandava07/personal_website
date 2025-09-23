@@ -16,6 +16,7 @@ multi-line comment.
 
 const doc_html = document.querySelector("html")
 const theme_switch = document.querySelector("#theme_switch")
+const sidebar = document.querySelector('#sidebar')
 
 
 // respect user's preference and change the theme at the beginning
@@ -30,16 +31,37 @@ else
 
 function enable_darkmode()
 {
+
+    // Temporarily disable navbar animation
+    navbar.style.transition = 'none';
+    sidebar.style.transition = 'none';
+
     localStorage.setItem('theme', 'dark');
     doc_html.classList.add("darkmode");
-    theme_switch.innerHTML
+
+        requestAnimationFrame(() => {
+        navbar.style.transition = 'background-color 0.2s ease, color 0.2s ease';
+        sidebar.style.transition = 'transform 0.3s ease-in-out, background-color 0.2s ease, color 0.2s ease';
+    });
 
 
 }
 function disable_darkmode()
 {
+
+    // Temporarily disable navbar animation
+    navbar.style.transition = 'none';
+    sidebar.style.transition = 'none';
+
+
     localStorage.setItem('theme', 'light');
     doc_html.classList.remove("darkmode");
+
+
+        requestAnimationFrame(() => {
+        navbar.style.transition = 'background-color 0.2s ease, color 0.2s ease';
+        sidebar.style.transition = 'transform 0.3s ease-in-out, background-color 0.2s ease, color 0.2s ease';
+    });
 
 }
 

@@ -1,4 +1,3 @@
-const sidebar = document.getElementById("sidebar")
 const sidebar_toggle = document.getElementById("sidebar_toggle");
 
 sidebar_toggle.addEventListener("click", () => {
