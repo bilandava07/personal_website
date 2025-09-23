@@ -2,7 +2,7 @@ import sqlite3
 from slugify import slugify
 from zoneinfo import ZoneInfo
 from datetime import datetime
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, redirect
 
 app = Flask(__name__)
 
@@ -30,6 +30,7 @@ def init_db(db_name):
             CREATE TABLE IF NOT EXISTS trips(
                 trip_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 trip_name TEXT NOT NULL,
+                trip_slug TEXT NOT NULL,
                 trip_description TEXT NOT NULL,
                 start_time TEXT NOT NULL,
                 avg_speed FLOAT NOT NULL,
@@ -96,6 +97,7 @@ def convert_trip_stats(raw_trip) -> dict:
     # Return formatted data ready to display on the frontend 
     return {
         "trip_name" : raw_trip["trip_name"],
+        "trip_slug" : raw_trip["trip_slug"],
         "trip_description" : raw_trip["trip_description"],
         "trip_id" : raw_trip["trip_id"],
         "avg_speed_kmh" : avg_speed_kmh,
@@ -124,6 +126,7 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DES
     querry = f'''
         SELECT   
             trips.trip_id,
+            trips.trip_slug,
             trips.trip_name,
             trips_images.image_id,
             trips_images.image_filename,
@@ -137,15 +140,6 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DES
 
     return trip_overview
 
-    # # List of tuples where each tuple is a trip 
-    # trips_converted = []
-
-
-    # # Convert the trips to the right format
-    # for raw_trip in raw_trips:
-    #     trips_converted.append(convert_trip_stats(raw_trip=raw_trip))
-
-    # return trips_converted
 
 
 def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
@@ -157,6 +151,7 @@ def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
         SELECT   
             trips.trip_id,
             trips.trip_name,
+            trips.trip_slug,
             trips.trip_description,
             trips.start_time,
             trips.avg_speed,
@@ -240,13 +235,17 @@ def cycling_page():
     return render_template('cycling_page.html', rides = rides_previews)
 
 
-@app.route('/trip/<int:trip_id>')
-
-def trip_page(trip_id : int):
+@app.route('/trip/<int:trip_id>/<trip_slug>')
+def trip_page(trip_id : int, trip_slug : str):
     '''Renders one trip's page with stats, photos, a map etc.'''
     cursor = get_db(TRIPS_DATABASE).cursor()
 
     trip_data = get_trip_info(cursor=cursor, trip_id=trip_id)
+
+    db_slug = trip_data["trip_slug"]
+
+    if trip_slug != db_slug:
+        return redirect(url_for("trip_page", trip_id=trip_id, trip_slug=db_slug))
 
     for image in trip_data["images"]:
         if image["is_main"]:

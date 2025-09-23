@@ -1,4 +1,5 @@
 import os
+import shutil
 import uuid
 import json
 from datetime import datetime
@@ -6,10 +7,10 @@ import sqlite3
 from zoneinfo import ZoneInfo
 from fitparse import FitFile
 from PIL import Image
-import shutil
+from slugify import slugify
 
 
-def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_in_dir : list[str], full_path_to_dir: str) -> bool:
+def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_in_dir : list[str], full_path_to_dir: str) -> None:
     '''
     Prompts the user for the path to the directory with images and then adds them to the trip
     '''
@@ -72,13 +73,12 @@ def test_query_id(cursor: sqlite3.Cursor, row_id : int) -> bool:
 
 
     while True:
-        confirm = input("The trip was inserted as expected?[y/n]\n")
+        confirm = input("The trip was inserted as expected?[y/n]\n").strip()
 
-        if isinstance(confirm, str):
-            if confirm.lower() == 'y':
-                return True
-            elif confirm.lower() == 'n':
-                return False   
+        if confirm.lower() == 'y':
+            return True
+        if confirm.lower() == 'n':
+            return False   
 
 
 def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
@@ -134,7 +134,7 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
 
         if confirm.lower() == 'y':
             confirmed = True
-
+            trip_slug = slugify(name)
 
 
     # Parses the .fit file and returns a readable json with name and values of the fit fields
@@ -242,6 +242,7 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     # Store all the needed data in a tuple for insertion
     ride_values_to_insert = (
         name,
+        trip_slug,
         description,
         start_time_str,
         avg_speed,
@@ -254,23 +255,13 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
         geojson_filename
     )
 
-    # Testing purposes confirmation prompt
-
-    # print(ride_values_to_insert)
-
-    # confirmed = False
-
-    # while not confirmed:
-    #     confirm = input("Those are values that will be inserted into the databased, procceed? [y]\n")
-    #     if confirm.lower() == 'y':
-    #         confirmed = True
 
     # Insert the tuple into the database
 
     insert_statement = ''' INSERT INTO trips 
-                    (trip_name, trip_description, start_time, avg_speed, max_speed, distance, total_time, moving_time,
+                    (trip_name, trip_slug, trip_description, start_time, avg_speed, max_speed, distance, total_time, moving_time,
                     total_ascent, total_descent, geojson_filename)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
                     '''
 
     cursor.execute(insert_statement, ride_values_to_insert)
@@ -291,10 +282,6 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     else:
         connection.rollback()
         print("\nInsert aborted, nothinb was saved to the database")
-    
-
-
-
 
 if __name__ == '__main__':
     # Establish connectin to the database

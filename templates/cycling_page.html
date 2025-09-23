@@ -48,7 +48,7 @@
         <section id="trips_overview">
                 
                 {% for trip in rides %}
-                <a href="{{ url_for('trip_page', trip_id = trip.trip_id) }}"> 
+                <a href="{{ url_for('trip_page', trip_id = trip.trip_id, trip_slug = trip.trip_slug) }}"> 
                         <div class="trip_card">
                         
                                 
