@@ -121,20 +121,21 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
     # Read the description file 
 
     with open(description_file, 'r', encoding='utf-8') as file:
-        description = file.read().strip()
-    
+        # Txt document structure : 
+        # [Name...]
+        # Description: [Description...]
+        text = file.read().strip()
 
-    # Prompt the user for the name of the trip
-    confirmed = False
+        # Split at 'Description:'
+        parts = text.split("Description:", 1)
 
-    while not confirmed:
-        name = input("What should the NAME for this ride be: ")
+        name = parts[0].strip()  
+        trip_slug = slugify(name)
 
-        confirm = input(f"Name: {name}\nAre you sure this is the NAME you want to use? [y]\n")
-
-        if confirm.lower() == 'y':
-            confirmed = True
-            trip_slug = slugify(name)
+        if len(parts) > 1:
+            description = parts[1].strip()
+        else:
+            description = ""
 
 
     # Parses the .fit file and returns a readable json with name and values of the fit fields
