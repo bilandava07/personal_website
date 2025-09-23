@@ -29,12 +29,10 @@ for all pages across the website (navbar, footer etc.)-->
 
         <header>
             <nav class="navbar">
-                <div class="navbar_container">
+                <div class="navbar_container {% block extra_navbar_class %} {% endblock %}">
 
                     <!-- Logo = name  -->
                     <div id="my_name"> <b>David Bilan</b></div>
-
-
 
 
                     <!-- Right part of the nav bar (links and button)-->
