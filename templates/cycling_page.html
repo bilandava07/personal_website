@@ -57,8 +57,8 @@
 
                 <div class="search_sort_by_section">
 
-                                <form class="search_bar_div">
-                                        <input type="text" placeholder="Search...">
+                                <form action="/cycling#trips_overview_main" autocomplete="off" method="get" class="search_bar_div">
+                                        <input type="text" name="q" placeholder="Search..." value="{{ search_query|default('') }}">
 
                                         <button type="submit" class="search_icon">
                                                 <svg viewBox="0 0 24 24" fill="none">
