@@ -103,8 +103,8 @@ def convert_trip_stats(raw_trip) -> dict:
         "moving_time_formatted" : moving_time_formatted,
         "start_date_time_formatted" : start_date_time_formatted,
         "paused_time_formatted" : paused_time_formatted,
-        "total_ascent" : raw_trip['total_ascent'],
-        "total_descent" : raw_trip['total_descent'],
+        "total_ascent" : int(raw_trip['total_ascent']),
+        "total_descent" : int(raw_trip['total_descent']),
         "geojson_filename" : raw_trip['geojson_filename']
     }
 
