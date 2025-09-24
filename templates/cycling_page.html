@@ -82,6 +82,8 @@
                         </div> -->
                 </div>
 
+
+
                 <section id="trips_overview">
 
 
@@ -100,6 +102,13 @@
                         </a>
 
                         {% endfor %}
+
+                        {% if not rides %}
+
+                        <div class="error_no_rides_found"> No rides were found! Try another search word! </div>
+
+
+                        {% endif %}
                 </section>
         </section>
 
