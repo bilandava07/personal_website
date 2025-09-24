@@ -10,15 +10,16 @@ function isMobile() {
 
 
 function updateNavbar() {
-  let heroBottom = hero.offsetTop + hero.offsetHeight;
-  if (window.scrollY < heroBottom) {
+  const heroRect = hero.getBoundingClientRect();
+  if (heroRect.bottom > 0) { // hero is still visible
     navbar.classList.add('hero_active');
-    sidebar.classList.add('hero_active'); // still on hero
+    sidebar.classList.add('hero_active');
   } else {
     navbar.classList.remove('hero_active');
-    sidebar.classList.remove('hero_active') // past hero
+    sidebar.classList.remove('hero_active');
   }
 }
+
 updateNavbar();
 
 // Smooth scroll from hero to main
@@ -26,7 +27,10 @@ function scrollToMain() {
   if (isScrolling) return;
   isScrolling = true;
   main.scrollIntoView({ behavior: 'smooth' });
-  setTimeout(() => isScrolling = false, 1000);
+  setTimeout(() => {
+    isScrolling = false;
+    updateNavbar();
+  }, 1000);
 }
 
 // Smooth scroll from main to hero
@@ -34,7 +38,10 @@ function scrollToHero() {
   if (isScrolling) return;
   isScrolling = true;
   hero.scrollIntoView({ behavior: 'smooth' });
-  setTimeout(() => isScrolling = false, 800);
+  setTimeout(() => {
+    isScrolling = false;
+    updateNavbar();
+  }, 800);
 }
 
 
