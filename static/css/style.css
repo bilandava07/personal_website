@@ -1,7 +1,7 @@
 :root
 {
-    --background-color: #ebebeb;
-    --secondary-bg-color: #ffffff;
+    --background-color: #e7e7e7;
+    --secondary-bg-color: #f7f7f7;
     --highlight-color: #4d75d3;
     /* --text-color: #0b328e; */
     --text-color: black;
@@ -22,7 +22,7 @@
 .darkmode
 {
     --background-color: #2f2f2f;
-    --secondary-bg-color: #555555;
+    --secondary-bg-color: #494949;
     --highlight-color: #9dbce8; 
     --text-color: #f1f1f1;
     --accent-color: #E8175D;
@@ -428,7 +428,7 @@ body
     justify-content: center;
 
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(300px, 20vw, 400px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(clamp(300px, 20vw, 450px), 1fr));
     grid-template-rows: min-content;
 
     align-items: start;
