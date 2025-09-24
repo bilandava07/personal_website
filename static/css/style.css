@@ -434,6 +434,8 @@ body
     border: 2px solid var(--text-color);
     box-shadow: 5px 5px 8px rgba(0,0,0,0.25);
 
+    margin: 2rem 0;
+
 
 }
 
@@ -473,6 +475,17 @@ body
     stroke: var(--text-color);
     stroke-width: 2;
     z-index: 6;
+}
+
+.error_no_rides_found{
+    margin-top: 2rem;
+    padding-left: 0.5rem;
+    font-size: clamp(1rem, 1.3vw, 4rem);
+    text-wrap-mode: nowrap;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-self: center;
 }
 
 
@@ -1009,6 +1022,17 @@ body
         font-size: clamp(1.3rem, 1.5vw, 2rem);
     }
 
+    .search_bar_div{
+        max-width: 100%;
+        
+    }
+
+    /* focus state (when user clicks) */
+    .search_bar_div:focus-within  {
+        max-width: 100%;
+
+}
+
 
 }
 
@@ -1045,7 +1069,19 @@ body
         font-size: clamp(1.3rem, 1.5vw, 2rem);
     }
 
-}
+
+    .search_bar_div{
+    max-width: %;
+        
+    }
+
+    /* focus state (when user clicks) */
+    .search_bar_div:focus-within  {
+        max-width: 100%;
+    }
+
+
+}   
 
 
 
