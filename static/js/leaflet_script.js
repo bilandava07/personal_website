@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     
     // Add default layer to map first
-    layers["CartoDB Positron"].addTo(map);
+    layers["OpenStreetMap"].addTo(map);
 
     // Add layer control
     L.control.layers(layers).addTo(map);
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var routeLayer = L.geoJSON(data, {
                 style: {
                     color: 'blue',      
-                    weight: 2.3,        
+                    weight: 2.45,        
                     opacity: 0.7
                 }
             }).addTo(map);
