@@ -24,7 +24,7 @@
     --background-color: #2f2f2f;
     --secondary-bg-color: #555555;
     --highlight-color: #9dbce8; 
-    --text-color: #d7d7d7;
+    --text-color: #f1f1f1;
     --accent-color: #E8175D;
 
 }
@@ -454,7 +454,7 @@ body
 
 .trip_card_text{
 
-    font-size: clamp(1rem, 2.5vw, 2.2rem);
+    font-size: clamp(1.3rem, 1.5vw, 2rem);
     font-weight: 300;
     position: absolute;   /* overlay on top of image */
     bottom: 0;       
@@ -844,9 +844,15 @@ body
 
     }
 
+
+    .trip_card_text{
+        font-size: clamp(1.3rem, 1.5vw, 2rem);
+    }
+
+
 }
 
-@media (min-width: 800px; max-width: 1200px){
+@media (min-width: 800px) and (max-width: 1200px) {
 
     /* Adjust the hero page for tablets */
 
@@ -873,7 +879,11 @@ body
         flex-direction: column;
         align-items: center;
         
-}
+    }
+
+    .trip_card_text{
+        font-size: clamp(1.3rem, 1.5vw, 2rem);
+    }
 
 }
 
