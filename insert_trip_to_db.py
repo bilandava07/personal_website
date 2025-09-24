@@ -276,6 +276,17 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
 
     newly_added_trip_id = cursor.lastrowid
 
+    # Update the fts table too
+    cursor.execute('''
+        INSERT INTO trips_fts(rowid, trip_name, trip_description)
+        VALUES (?, ?, ?)
+    ''',(
+        newly_added_trip_id,       # rowid
+        ride_values_to_insert[0],  # trip_name (first element of the tuple)
+        ride_values_to_insert[2]   # trip_description (third element of the tuple)
+    ))
+
+
 
     # Add images to the trip
     add_images_to_trip(cursor=cursor, trip_id=newly_added_trip_id, all_files_in_dir=all_files_in_dir, full_path_to_dir=full_path_to_dir)

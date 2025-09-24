@@ -1,8 +1,10 @@
 import sqlite3
-from slugify import slugify
-from zoneinfo import ZoneInfo
 from datetime import datetime
-from flask import Flask, render_template, g, redirect
+from zoneinfo import ZoneInfo
+from slugify import slugify
+from flask import Flask, render_template, g, redirect, request
+from init_fts import init_fts
+from fts_querry_prefix import fts_prefix_query
 
 app = Flask(__name__)
 
@@ -109,32 +111,65 @@ def convert_trip_stats(raw_trip) -> dict:
     }
 
 
-def get_all_trips_with_main_images(cursor: sqlite3.Cursor, order_by : str = 'DESC') -> list[any]:
+def get_all_trips_with_main_images(cursor: sqlite3.Cursor, search_query : str | None, order_by : str = 'DESC') -> list[any]:
     '''
     Querries the database for all trips and their ids and names
     Does so by taking into account user's ordering preference 
     for now Duration ASC or Duration DESC
     '''
-
     if order_by.upper() not in ('ASC', 'DESC'):
         # Default to descending order if parameter is invalid
         order_by = 'DESC'
-    querry = f'''
-        SELECT   
-            trips.trip_id,
-            trips.trip_slug,
-            trips.trip_name,
-            trips_images.image_id,
-            trips_images.image_filename,
-            trips_images.is_main
-        FROM trips
-        LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
-        AND trips_images.is_main = 1
-        ORDER BY trips.total_time {order_by}
-    '''
-    trip_overview = cursor.execute(querry).fetchall()
 
-    return trip_overview
+    if search_query:
+        # User submitted a search querry
+        search_query = search_query.strip()
+
+
+    if search_query:
+
+        search_query = fts_prefix_query(search_query)
+
+        db_querry = f'''
+            SELECT
+                trips.trip_id,
+                trips.trip_slug,
+                trips.trip_name,
+                trips_images.image_id,
+                trips_images.image_filename,
+                trips_images.is_main
+            FROM trips
+            JOIN trips_fts ON trips.trip_id = trips_fts.rowid
+            LEFT JOIN trips_images
+                ON trips.trip_id = trips_images.trip_id
+                AND trips_images.is_main = 1
+            WHERE trips_fts MATCH ?
+            ORDER BY trips.total_time {order_by}
+        '''
+
+        trips_overviews = cursor.execute(db_querry, (search_query,)).fetchall()
+
+    else:
+
+        db_querry = f'''
+            SELECT   
+                trips.trip_id,
+                trips.trip_slug,
+                trips.trip_name,
+                trips_images.image_id,
+                trips_images.image_filename,
+                trips_images.is_main
+            FROM trips
+            LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
+            AND trips_images.is_main = 1
+            ORDER BY trips.total_time {order_by}
+        '''
+
+
+        trips_overviews = cursor.execute(db_querry).fetchall()
+
+    return trips_overviews
+
 
 
 
@@ -210,6 +245,7 @@ def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
 
 
 init_db(TRIPS_DATABASE)
+init_fts(TRIPS_DATABASE)
 
 
 
@@ -224,11 +260,22 @@ def home_page():
 def cycling_page():
     ''' Renders the main cycling page '''
 
+    # get the search term from URL
+    search_query = request.args.get('q', '')  
+
+
+
     cursor = get_db(TRIPS_DATABASE).cursor()
 
-    rides_previews = get_all_trips_with_main_images(cursor=cursor)
+    
 
-    return render_template('cycling_page.html', rides = rides_previews)
+    rides_previews = get_all_trips_with_main_images(cursor=cursor, search_query=search_query)
+
+    return render_template('cycling_page.html', rides=rides_previews, search_query=search_query)
+
+
+
+
 
 
 @app.route('/trip/<int:trip_id>/<trip_slug>')
@@ -250,6 +297,14 @@ def trip_page(trip_id : int, trip_slug : str):
     regular_images = [img for img in trip_data["images"] if not img["is_main"]]
 
     return render_template('trip_page.html', trip = trip_data, main_image = main_image, regular_images = regular_images )
+
+
+
+
+
+
+
+
 
 @app.teardown_appcontext
 def close_connection(exception):
