@@ -598,8 +598,8 @@ body
 }
 
 .trip_date{
-    font-size: clamp(0.9rem, 1.5vw, 1.8rem);
-    font-weight: 700;
+    font-size: clamp(0.9rem, 1.4vw, 1.7rem);
+    font-weight: 600;
 }
 
 .trip_name{
