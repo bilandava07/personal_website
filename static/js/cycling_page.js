@@ -1,5 +1,5 @@
 const hero = document.getElementById('cycling_hero');
-const main = document.getElementById('trips_overview');
+const main = document.getElementById('trips_overview_main');
 const arrow = document.getElementById('cycling_hero_arrow');
 let isScrolling = false;
 
