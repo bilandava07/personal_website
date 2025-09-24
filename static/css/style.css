@@ -454,8 +454,8 @@ body
 
 .trip_card_text{
 
-    font-size: clamp(1.3rem, 1.5vw, 2rem);
-    font-weight: 300;
+    font-size: clamp(1.3rem, 1.4vw, 1.8rem);
+    font-weight: 350;
     position: absolute;   /* overlay on top of image */
     bottom: 0;       
     left: 0;
