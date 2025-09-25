@@ -531,6 +531,8 @@ body
 }
 
 .sort_by_button {
+
+    background-color: var(--secondary-bg-color);
     padding: 1vw;
     font-size: clamp(1rem, 2vw, 1.5rem);
     align-self: center;
@@ -557,9 +559,10 @@ body
     visibility: hidden;          /* prevents interaction */
 
     background-color: transparent;
+    gap: 1rem;
 
 
-    transform: translateX(+100px); /* slightly to the left initially */
+    transform: translateX(10%); /* slightly to the left initially */
     transition: opacity 0.4s ease, transform 0.3s ease, visibility 0.4s ease;
 
     z-index: 4;
@@ -567,7 +570,9 @@ body
 
 .sorting_options{
 
-    padding: 0 1rem;
+    padding: 1rem 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
 .sorting_options:hover{
@@ -581,7 +586,7 @@ body
   visibility: visible;
   transform: translateX(0); /* slides left into place */
 }
-.sort_by_div:hover .sort_by_button{
+.sort_by_button:hover {
     background-color: lightblue;
 }
 

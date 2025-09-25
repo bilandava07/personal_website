@@ -6,6 +6,8 @@ from flask import Flask, render_template, g, redirect, request
 from init_fts import init_fts
 from fts_querry_prefix import fts_prefix_query
 
+from sorting_order_enum import SortingOrder
+
 app = Flask(__name__)
 
 TRIPS_DATABASE = 'trips.db'
@@ -111,15 +113,28 @@ def convert_trip_stats(raw_trip) -> dict:
     }
 
 
-def get_all_trips_with_main_images(cursor: sqlite3.Cursor, search_query : str | None, order_by : str = 'DESC') -> list[any]:
+def get_all_trips_with_main_images(cursor: sqlite3.Cursor, search_query : str | None, order_by : str)-> list[any]:
     '''
     Querries the database for all trips and their ids and names
-    Does so by taking into account user's ordering preference 
-    for now Duration ASC or Duration DESC
+    Does so by taking into account user's ordering preference and
+    search querry if provided
     '''
-    if order_by.upper() not in ('ASC', 'DESC'):
-        # Default to descending order if parameter is invalid
-        order_by = 'DESC'
+
+    if order_by == SortingOrder.DIST_ASC.value:
+        order_by_column = "trips.distance"
+        order_by_value = "ASC"
+    elif order_by == SortingOrder.DIST_DESC.value:
+        order_by_column = "trips.distance"
+        order_by_value = "DESC"
+    elif order_by == SortingOrder.DATE_ASC.value:
+        order_by_column = "trips.start_time"
+        order_by_value = "ASC"
+    elif order_by == SortingOrder.DATE_DESC.value:
+        order_by_column = "trips.start_time"
+        order_by_value = "DESC"
+
+
+    
 
     if search_query:
         # User submitted a search querry
@@ -144,7 +159,7 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, search_query : str | 
                 ON trips.trip_id = trips_images.trip_id
                 AND trips_images.is_main = 1
             WHERE trips_fts MATCH ?
-            ORDER BY trips.total_time {order_by}
+            ORDER BY {order_by_column} {order_by_value}
         '''
 
         trips_overviews = cursor.execute(db_querry, (search_query,)).fetchall()
@@ -162,7 +177,7 @@ def get_all_trips_with_main_images(cursor: sqlite3.Cursor, search_query : str | 
             FROM trips
             LEFT JOIN trips_images ON trips.trip_id = trips_images.trip_id 
             AND trips_images.is_main = 1
-            ORDER BY trips.total_time {order_by}
+            ORDER BY {order_by_column} {order_by_value}
         '''
 
 
@@ -261,18 +276,22 @@ def cycling_page():
     ''' Renders the main cycling page '''
 
     # get the search term from URL
-    search_query = request.args.get('q', '')  
+    search_query = request.args.get('q', '') 
 
+    # Get the sorting option from URL
+    sort = request.args.get('sort', default=SortingOrder.DIST_ASC.value, type=int)
 
 
     cursor = get_db(TRIPS_DATABASE).cursor()
 
     
 
-    rides_previews = get_all_trips_with_main_images(cursor=cursor, search_query=search_query)
+    rides_previews = get_all_trips_with_main_images(cursor=cursor, search_query=search_query, order_by=sort)
 
-    return render_template('cycling_page.html', rides=rides_previews, search_query=search_query)
-
+    return render_template('cycling_page.html',
+                           rides=rides_previews,
+                           search_query=search_query,
+                           SortingOrder = SortingOrder)
 
 
 
