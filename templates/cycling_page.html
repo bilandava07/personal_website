@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 
+{% block preload_assets %} <link rel="preload" as="image" href="/static/images/cycling_hero_bg.jpeg"> {% endblock %}
+
+
 
 {% block body_class %}cycling-page hero_page{% endblock %}
 {% block extra_navbar_class %} hero_active {% endblock %}
