@@ -279,7 +279,7 @@ def cycling_page():
     search_query = request.args.get('q', '') 
 
     # Get the sorting option from URL
-    sort = request.args.get('sort', default=SortingOrder.DIST_ASC.value, type=int)
+    sort = request.args.get('sort', default=SortingOrder.DATE_DESC.value, type=int)
 
 
     cursor = get_db(TRIPS_DATABASE).cursor()
