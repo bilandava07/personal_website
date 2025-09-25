@@ -3,11 +3,12 @@
     --background-color: #e7e7e7;
     --secondary-bg-color: #f7f7f7;
     --highlight-color: #4d75d3;
-    /* --text-color: #0b328e; */
     --text-color: black;
     --accent-color: #E8175D;
+    --footer-bg-color: var(--secondary-bg-color);
 
     --cards-border-radius: 5%;
+
     scrollbar-width: none;
     box-sizing: border-box; 
     margin: 0;
@@ -22,7 +23,8 @@
 .darkmode
 {
     --background-color: #2f2f2f;
-    --secondary-bg-color: #494949;
+    --secondary-bg-color: #424242;
+    --footer-bg-color: #383838; 
     --highlight-color: #9dbce8; 
     --text-color: #f1f1f1;
     --accent-color: #E8175D;
@@ -172,6 +174,19 @@ aside {
 #sidebar_toggle:hover::after
 {
     opacity: 1;
+}
+
+.footer{
+    margin-top: clamp(1rem, 3vh, 4rem);
+    height: calc(var(--navbar-height) - var(--navbar-height)/2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 50;
+
+
+    font-size: clamp(0.7rem, 1vw, 1rem);
+    background-color: var(--footer-bg-color);
 }
 
 
@@ -407,6 +422,7 @@ body
 /* Sort by button */
 
 #trips_overview_main{
+
     padding-top: calc(var(--navbar-height));
     padding-left: min(50px, 5%);
     padding-right: min(50px, 5%);
@@ -581,8 +597,10 @@ body
 }
 
 .scroll_snap_sections section{
-    height: 100vh;
+    height: 1fr;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -590,7 +608,6 @@ body
 
 #trips_overview {
 
-    height: auto;
     justify-content: center;
 
     display: grid;
@@ -599,6 +616,7 @@ body
 
     align-items: start;
     gap: clamp(10px, 2vw, 30px);
+
 }
 
 
