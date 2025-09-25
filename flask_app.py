@@ -291,7 +291,8 @@ def cycling_page():
     return render_template('cycling_page.html',
                            rides=rides_previews,
                            search_query=search_query,
-                           SortingOrder = SortingOrder)
+                           current_sort=sort,
+                           SortingOrder=SortingOrder)
 
 
 
