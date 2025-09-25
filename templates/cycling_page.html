@@ -92,22 +92,22 @@
                                         <button type="submit"
                                                 class="{% if current_sort == SortingOrder.DIST_ASC.value %}sorting_option_active{% endif %}"
                                                 name="sort" value="{{ SortingOrder.DIST_ASC.value }}">Distance:
-                                                Asc</button>
+                                                Shortest first</button>
 
 
                                         <button type="submit"
                                                 class="{% if current_sort == SortingOrder.DIST_DESC.value %}sorting_option_active{% endif %}"
                                                 name="sort" value="{{ SortingOrder.DIST_DESC.value }}">Distance:
-                                                Desc</button>
+                                                Longest first</button>
 
                                         <button type="submit"
                                                 class="{% if current_sort == SortingOrder.DATE_ASC.value %}sorting_option_active{% endif %}"
-                                                name="sort" value="{{ SortingOrder.DATE_ASC.value }}">Date: Asc</button>
+                                                name="sort" value="{{ SortingOrder.DATE_ASC.value }}">Date: Oldest first</button>
 
                                         <button type="submit"
                                                 class="{% if current_sort == SortingOrder.DATE_DESC.value %}sorting_option_active{% endif %}"
                                                 name="sort" value="{{ SortingOrder.DATE_DESC.value }}">Date:
-                                                Desc</button>
+                                                Newest first</button>
                                 </div>
                         </form>
                 </div>
