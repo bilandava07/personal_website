@@ -72,17 +72,16 @@
                                 </button>
                         </form>
 
-                        <!-- <div class="sort_by_div">
-                                <button class="sort_by_button"> Sort by</button>
+                        <form action="/cycling#trips_overview_main" method="get" class="sort_by_div">
+                                <div class="sort_by_button"> Sort by</div>
 
                                 <div class="sort_by_content">
-                                        <div class="sorting_options">Distance: Asc</div>
-                                        <div class="sorting_options">Distance: Desc</div>
-                                        <div class="sorting_options">Date: Asc</div>
-                                        <div class="sorting_options">Date: Desc </div>
-
+                                        <button type="submit" class="sorting_options" name="sort" value="{{ SortingOrder.DIST_ASC.value }}">Distance: Asc</button>
+                                        <button type="submit" class="sorting_options" name="sort" value="{{ SortingOrder.DIST_DESC.value }}">Distance: Desc</button>
+                                        <button type="submit" class="sorting_options" name="sort" value="{{ SortingOrder.DATE_ASC.value }}">Date: Asc</button>
+                                        <button type="submit" class="sorting_options" name="sort" value="{{ SortingOrder.DATE_DESC.value }}">Date: Desc</button>
                                 </div>
-                        </div> -->
+                        </form>
                 </div>
 
 
