@@ -630,17 +630,17 @@ body
 }
 
 .sort_by_content button.sorting_option_active {
-    transform: translateY(-0.5em);
+    transform: translateY(-0.4em);
     box-shadow: 5px 5px 0.5px;
 }
 
 
 .sort_by_content button.sorting_option_active:hover {
-    transform: translateY(-0.5em);
+    transform: translateY(-0.4em);
 }
 
 .sort_by_content button:hover{
-    transform: scale(1.05) translateY(-0.5em);
+    transform: scale(1.05) translateY(-0.4em);
     box-shadow: 5px 5px 0.5px;
 
 }
@@ -1245,7 +1245,7 @@ that do not fit the original layout */
 }
 
 
-* {
+/* * {
     outline: 1px solid red;
-}
+} */
 
