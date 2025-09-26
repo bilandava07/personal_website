@@ -423,10 +423,14 @@ body
 
 #trips_overview_main{
 
+    width: 100%;
+
+    max-width: 100vw;
 
     padding-top: calc(var(--navbar-height));
     padding-left: min(50px, 5%);
     padding-right: min(50px, 5%);
+    box-sizing: border-box;
 }
 
 .search_sort_by_section {
@@ -1186,8 +1190,8 @@ that do not fit the original layout */
 
     .search_bar_div{
         display: flex;
-        width: 100%;
-        max-width: 100%;
+        width: 95%;
+        max-width: 95%;
         transition: max-width 0.3s ease;
         position: relative;
 
@@ -1241,7 +1245,7 @@ that do not fit the original layout */
 }
 
 
-/* * {
+* {
     outline: 1px solid red;
-} */
+}
 
