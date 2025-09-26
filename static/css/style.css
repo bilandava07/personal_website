@@ -599,11 +599,11 @@ body
 
 .sort_by_content button{
 
-    font-size: clamp(0.7rem, 0.8vw, 0.8rem);
+    font-size: clamp(0.6rem, 0.8vw, 0.8rem);
 
     min-width: 0;
     width: auto;
-    padding: clamp(0.6rem, 0.5vw, 1rem) clamp(0.2rem, 0.7vw, 1rem);
+    padding: clamp(0.6rem, 0.5vw, 1rem) clamp(0.3rem, 0.7vw, 1rem);
     border-radius: 10px;
 
     background-color: var(--background-color);
