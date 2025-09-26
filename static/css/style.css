@@ -452,7 +452,7 @@ body
     margin: 0;
     display: flex;
     flex: 1;
-    max-width: clamp(20%, 30vw, 30%);
+    max-width: clamp(20%, 30vw, 24%);
     transition: max-width 0.3s ease;
     position: relative;
 
@@ -491,7 +491,7 @@ body
   }
 
 .search_icon svg{
-    width: 2rem;
+    width: clamp(1rem, 2vw, 2rem);
 
     margin-right: 1rem;
     aspect-ratio: 1/1;
@@ -550,6 +550,7 @@ body
     justify-content: flex-start;
     align-items: center;
     flex-direction: row-reverse;
+
 
     background-color: var(--secondary-bg-color);
     padding: 0.5em 0;
@@ -619,7 +620,7 @@ body
 }
 
 #sort_by_arrow{
-    width: 1.5em;
+    width: clamp(0.8em, 5vw, 1.3em);
     fill: var(--text-color);
     stroke-width: 2;
 }
@@ -721,8 +722,8 @@ body
     padding: 3em 0.5em 0.55em 0.55em ;
     background: linear-gradient(
         to top,
-        hsla(0, 0%, 0%, 1), /* black with 70% opacity */
-        hsla(0, 0%, 0%, 0)    /* transparent */
+        hsla(0, 0%, 0%, 1),
+        hsla(0, 0%, 0%, 0)  
     );
 }
 
