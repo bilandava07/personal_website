@@ -631,7 +631,7 @@ body
 
 .sort_by_content button.sorting_option_active {
     transform: translateY(-0.4em);
-    box-shadow: 5px 5px 0.5px;
+    box-shadow: 4px 4px 0.5px;
 }
 
 
@@ -641,7 +641,7 @@ body
 
 .sort_by_content button:hover{
     transform: scale(1.05) translateY(-0.4em);
-    box-shadow: 5px 5px 0.5px;
+    box-shadow: 4px 4px 0.5px;
 
 }
 
@@ -1173,19 +1173,19 @@ that do not fit the original layout */
 @media (max-width: 1200px) {
     .search_sort_by_section {
 
-    display: flex;
-    flex-direction: column-reverse;
+        display: flex;
+        flex-direction: column-reverse;
 
-    justify-content: space-between;
-    align-items: flex-start;
+        justify-content: space-between;
+        align-items: flex-start;
 
-    height: auto;
+        height: auto;
 
-    margin: 1.5rem 0;
+        margin: 1.5rem 0;
 
-    box-sizing: border-box;
+        box-sizing: border-box;
 
-    gap: 1rem 0;
+        gap: 1rem 0;
     }
 
     .search_bar_div{
@@ -1209,8 +1209,6 @@ that do not fit the original layout */
         flex-direction: row;
 
 
-
-
     }
 
     .sort_by_content{
@@ -1228,6 +1226,16 @@ that do not fit the original layout */
         transform: translateX(0);
 
 
+
+    }
+
+    .sort_by_content button {
+        box-shadow: 1.7px 1.7px 0.5px var(--text-color);
+
+    }
+    .sort_by_content button.sorting_option_active {
+        transform: translateY(-0.4em);
+        box-shadow: 2.7px 2.7px 0.5px;
     }
 
     .sort_by_button {
