@@ -223,12 +223,16 @@ aside {
 
 }
 
+.my_name{
+    margin: auto auto auto 0;
+
+}
+
 
 
 #my_name
 {
     font-size: clamp(1.5rem, 2vw,5rem);
-    margin: auto auto auto 0;
     font-weight: 900;
     list-style: none;
     text-decoration: none;
