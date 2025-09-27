@@ -35,7 +35,7 @@ endblock %}
 
                 <div class="trip_main_video">
 
-                        <video id="trip_main_video" autoplay muted playsinline controls>
+                        <video id="trip_main_video" autoplay muted playsinline controls poster="{{ url_for('static', filename='images/' + main_image.image_filename) }}">
                                 <source src="{{ url_for('static', filename='videos/' + trip.trip_video_filename) }}">
                         </video>
                 </div>
