@@ -17,7 +17,7 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
 
 
 
-    valid_extensions= ('.jpeg', '.jpg', '.png')
+    valid_extensions = ('.jpeg', '.jpg', '.png')
 
     images_to_add : list[str] = []
 
@@ -25,9 +25,42 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
     for file in all_files_in_dir:
         if file.lower().endswith(valid_extensions):
             images_to_add.append(file)
-        else:
-            print("Not an image, skipping... ")
 
+
+    # Add optional mp4 video file if it exists
+    mp4_video_filename = None
+    for file in all_files_in_dir:
+
+        if file.lower().endswith('.mp4'):
+            mp4_video_filename = file
+
+
+    if mp4_video_filename is not None:
+
+
+        insert_statement = '''
+            UPDATE trips
+            SET trip_video_filename = ?
+            WHERE trip_id = ?
+            '''
+
+        cursor.execute(insert_statement, (mp4_video_filename, trip_id))
+
+        # Copy the video to the project directory
+
+        full_path = os.path.join(full_path_to_dir, mp4_video_filename)
+
+        project_videso_dir = '/Users/dava/Projects/web_dev/my_website/static/videos'
+
+        dest_path = os.path.join(project_videso_dir, mp4_video_filename)
+
+        shutil.copy(full_path, dest_path)
+
+        print("Added and copied the video")
+
+
+
+    # Proccess found images
     main_image_exists = False
 
     for image_filename in images_to_add:
@@ -58,8 +91,8 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
 
         cursor.execute(insert_statement, (trip_id, image_filename, is_main, image_width, image_height))
 
-    if not main_image_exists:
-        raise Exception("No main image was found in the directory! Aborting")
+    if not main_image_exists and not mp4_video_filename:
+        raise Exception("No main image or main video was found in the directory! Aborting")
     
 
 
