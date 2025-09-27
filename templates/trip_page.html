@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 
-{% block preload_assets %} <link rel="preload" as="image" href="{{ url_for('static', filename='images/' + main_image.image_filename) }}"> {% endblock %}
+{% block preload_assets %}
+<link rel="preload" as="image" href="{{ url_for('static', filename='images/' + main_image.image_filename) }}"> {%
+endblock %}
 
 {% block leaflet %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -28,17 +30,31 @@
 
         <div class="trip_page_contents_grid">
 
-                <div class="trip_main_image_div">
 
+                {% if trip.trip_video_filename %}
+
+                <div class="trip_main_video">
+
+                        <video id="trip_main_video" loop playsinline controls>
+                                <source src="{{ url_for('static', filename='videos/' + trip.trip_video_filename) }}">
+                        </video>
+                </div>
+
+
+                {% else %}
+
+                <div class="trip_main_image_div">
                         <img id="trip_main_image"
                                 src="{{ url_for('static', filename='images/' + main_image.image_filename) }}">
-
                 </div>
+
+                {% endif %}
+
 
                 <div class="trip_name_description">
                         <h1 class="trip_name"> {{ trip.trip_name }}</h1>
                         <div class="trip_date">{{trip.start_date_time_formatted}}</div>
-                        <div class="trip_description"> 
+                        <div class="trip_description">
 
                                 {{ trip.trip_description }}
 
@@ -95,7 +111,7 @@
                         </div>
                 </div>
 
-                <div class="trip_map_div">
+                <div class="trip_map_div{% if trip.trip_video_filename %}_16_9{% endif %}">
                         <div id="map" data-geojson="{{ trip.geojson_filename }}"></div>
                 </div>
         </div>

@@ -34,6 +34,7 @@ def init_db(db_name):
             CREATE TABLE IF NOT EXISTS trips(
                 trip_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 trip_name TEXT NOT NULL,
+                trip_video_filename TEXT,
                 trip_slug TEXT NOT NULL,
                 trip_description TEXT NOT NULL,
                 start_time TEXT NOT NULL,
@@ -97,6 +98,7 @@ def convert_trip_stats(raw_trip) -> dict:
     # Return formatted data ready to display on the frontend 
     return {
         "trip_name" : raw_trip["trip_name"],
+        "trip_video_filename" : raw_trip['trip_video_filename'],
         "trip_slug" : raw_trip["trip_slug"],
         "trip_description" : raw_trip["trip_description"],
         "trip_id" : raw_trip["trip_id"],
@@ -197,6 +199,7 @@ def get_trip_info(cursor: sqlite3.Cursor, trip_id:int) -> dict | None :
         SELECT   
             trips.trip_id,
             trips.trip_name,
+            trips.trip_video_filename,
             trips.trip_slug,
             trips.trip_description,
             trips.start_time,
