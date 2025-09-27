@@ -31,11 +31,8 @@ with sqlite3.connect("trips.db") as conn:
 
             image_files = [row['image_filename'] for row in cursor.fetchall()]
 
-
             # Delete images from DB
             cursor.execute("DELETE FROM trips_images WHERE trip_id = ?", (last_trip_id,))
-            # Delete trip from DB
-            cursor.execute("DELETE FROM trips WHERE trip_id = ?", (last_trip_id,))
 
             # Delete image files from disk
             for filename in image_files:
@@ -46,6 +43,30 @@ with sqlite3.connect("trips.db") as conn:
                     print("Could not find the image! Not deleted")
 
             print(f"Trip {last_trip_id} and its images have been deleted.")
+
+
+            # Delete video if exists
+            video_row = cursor.execute(
+                "SELECT trip_video_filename FROM trips WHERE trip_id = ?", (last_trip_id,)
+            ).fetchone()
+
+            video_filename = video_row['trip_video_filename'] if video_row else None
+
+            if video_filename is not None:
+            
+                path = os.path.join('./static/videos', video_filename)
+                if os.path.exists(path):
+                    os.remove(path)
+                    print("Deleted the video from the disk")
+                else:
+                    print("Could not find the video file! Not deleted")
+
+            else:
+                print("No vide filename associated with the trip...")
+
+            # Delete trip from DB
+            print("Deleting the trip itself from the database...")
+            cursor.execute("DELETE FROM trips WHERE trip_id = ?", (last_trip_id,))
 
             conn.commit()
             
