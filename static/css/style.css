@@ -110,8 +110,7 @@ body
 .navlist li a:hover,
 .navlist_hamburger li a:hover
 {
-    color: var(--highlight-color);
-    transform: scale(1.04);
+    transform: scale(1.05);
     transition: color 0.3s, transform 0.3s;
 }
 
@@ -230,6 +229,17 @@ aside {
 {
     font-size: clamp(1.5rem, 2vw,5rem);
     margin: auto auto auto 0;
+    font-weight: 900;
+    list-style: none;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: color 0.3s, transform 0.3s;
+
+    display: block;
+}
+
+#my_name:hover {
+    transform: scale(1.03);
 }
 
 
@@ -251,7 +261,7 @@ body
     aspect-ratio: 1/1;
     border-radius: 30%;
     color: var(--text-color);
-    background-color: var(--background-color);
+    background-color: var(--secondary-bg-color);
     margin: auto 0 auto auto;
 
 }
@@ -275,7 +285,7 @@ body
     position: absolute;
     inset: 0;
     
-    background-color: var(--secondary-bg-color);
+    background-color: var(--background-color);
     opacity: 0;
     transition: opacity 0.5s;
     border-radius: 30%;
