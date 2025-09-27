@@ -1,21 +1,17 @@
 import os
 import shutil
-import uuid
 import json
-from datetime import datetime
 import sqlite3
-from zoneinfo import ZoneInfo
-from fitparse import FitFile
 from PIL import Image
 from slugify import slugify
+
+from fit_files_to_geojson_merge import parse_and_merge_fit_files
 
 
 def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_in_dir : list[str], full_path_to_dir: str) -> None:
     '''
     Prompts the user for the path to the directory with images and then adds them to the trip
     '''
-
-
 
     valid_extensions = ('.jpeg', '.jpg', '.png')
 
@@ -138,27 +134,17 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
         else:
             print('Directory was not found! Check the path.')
 
-    # Find the .fit file in the directory
     all_files_in_dir = os.listdir(full_path_to_dir)
 
-    fitfile = None
-    description_file = None
+
+    # Find and read the description file     
+
     for file in all_files_in_dir:
-        if file.lower().endswith('.fit'):
-            path_to_fit_file = os.path.join(full_path_to_dir, file)
-            fitfile = FitFile(path_to_fit_file)
-        
         if file.lower().startswith('description'):
             description_file = os.path.join(full_path_to_dir, file)
 
-    if fitfile is None:
-        raise Exception("No .fit file found in the directory!")
-    
     if description_file is None:
         raise Exception("No description file found in the directory!")
-    
-
-    # Read the description file 
 
     with open(description_file, 'r', encoding='utf-8') as file:
         # Txt document structure : 
@@ -177,125 +163,23 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
         else:
             description = ""
 
+    # Do the work on .fit files to merge and extract all the data needed for insertion 
+    merged_stats_and_route = parse_and_merge_fit_files(all_files_in_dir=all_files_in_dir, full_path_to_dir=full_path_to_dir)
 
-    # Parses the .fit file and returns a readable json with name and values of the fit fields
-    for session in fitfile.get_messages('session'):
-        ride_data = {}
-        for field in session:
-            ride_data[field.name] = field.value
-
-    print(ride_data)
-
-    # Extract the route from the .fit file
-    raw_route_coordinates = []
-
-    for record in fitfile.get_messages('record'):
-        # Convert the time_stamp to seconds right away to be able to do math on them later
-        
-        time_stamp = datetime.fromisoformat(str(record.get_value('timestamp')))
-        lon = record.get_value('position_long')
-        lat = record.get_value('position_lat')
-
-        # Convert the semicircles to degrees
-        if lat is not None and lon is not None:
-            lon_deg = lon * (180 / 2**31)
-            lat_deg = lat * (180 / 2**31)
-
-            raw_route_coordinates.append((time_stamp, lon_deg, lat_deg))
-
-
-    
-    # Filter the coordinates to only leave one coordinate every [interval] seconds
-    filtered_route_coordinates = []
-
-    last_ts = None
-
-    interval = 10 # seconds
-
-    for coordinate in raw_route_coordinates:
-        current_ts = coordinate[0] # datetime object
-
-        # Initialize last_ts
-        if last_ts is None:
-            # Always add the first point
-            filtered_route_coordinates.append((coordinate[1], coordinate[2]))
-            last_ts = coordinate[0]
-            continue
-
-
-        # Add if interval has passed
-        if (current_ts - last_ts).total_seconds() >= interval:
-            # If reached interval, only append the lat and long
-            filtered_route_coordinates.append((coordinate[1],coordinate[2]))
-            last_ts = current_ts
-
-
-
-    # Create GeoJSON file using the coordinates
-    geojson_dict = {
-    "type": "Feature",
-    "geometry": {
-        "type": "LineString",
-        "coordinates": filtered_route_coordinates
-        }
-    }
-
-    route_geo_json = json.dumps(geojson_dict)
-
-    # Generate random unique name
-    geojson_filename = f"{uuid.uuid4().hex}.geojson"
-
-    folder = "static/geo_json"
-
-    # Full path to the file
-    geo_json_path = os.path.join(folder, geojson_filename)
-
-    # Write the route GeoJSON to the file to reference it later
-    with open(geo_json_path, 'w') as file:
-        file.write(route_geo_json)
-
-
-
-    # Get the data to insert to the table from the json
-
-    # Store the start time in the ISO 8601 format
-    start_time_utc = ride_data['start_time']  # naive datetime from FIT
-    start_time_utc = start_time_utc.replace(tzinfo=ZoneInfo("UTC"))
-
-    # Convert to local timezone
-    local_tz = ZoneInfo("Europe/Berlin")
-    start_time_local = start_time_utc.astimezone(local_tz)
-
-    start_time_str = start_time_local.strftime("%Y-%m-%d %H:%M:%S")
-
-    # Get the rest of the metrics as is (maybe other formats later?)
-    avg_speed = ride_data['avg_speed']
-    max_speed = ride_data['max_speed']
-
-    distance = ride_data['total_distance']
-
-    total_time_s = ride_data['total_elapsed_time']
-    moving_time = ride_data['total_timer_time']
-
-    total_ascent = ride_data['total_ascent']
-    total_descent = ride_data['total_descent']
-
-    # Store all the needed data in a tuple for insertion
     ride_values_to_insert = (
         name,
         trip_slug,
         description,
-        start_time_str,
-        avg_speed,
-        max_speed,
-        distance,
-        total_time_s,
-        moving_time,
-        total_ascent,
-        total_descent,
-        geojson_filename
+        merged_stats_and_route['start_time'],
+        merged_stats_and_route['avg_speed'],
+        merged_stats_and_route['max_speed'],
+        merged_stats_and_route['distance'],
+        merged_stats_and_route['total_time'],
+        merged_stats_and_route['moving_time'],
+        merged_stats_and_route['total_ascent'],
+        merged_stats_and_route['total_descent'],
+        merged_stats_and_route['geojson_filename']
     )
-
 
     # Insert the tuple into the database
 
