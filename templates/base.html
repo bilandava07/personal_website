@@ -19,6 +19,8 @@ for all pages across the website (navbar, footer etc.)-->
 
     <link href="/static/css/style.css" rel="stylesheet">
 
+    {% block additional_css %} {% endblock %}
+
     {% block leaflet %} {% endblock %}
 
     {% block preload_assets %} {% endblock %}
@@ -44,7 +46,6 @@ for all pages across the website (navbar, footer etc.)-->
                             <li> <a href="{{ url_for('home_page')}}">Home</a></li>
                             <li>Projects</li>
                             <li><a href="{{ url_for('cycling_page')}}">Cycling</a></li>
-                            <li>Contact</li>
                         </ul>
 
                         <!-- Theme switch -->
