@@ -1,14 +1,16 @@
-.home_page main {
+/* .home_page main {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-}
+} */
 
 .home_page_main {
     margin: min(50px, 10%);
 
+    justify-self: center;
 
+    padding: var(--navbar-height) 0;
 }
 
 .page_grid 
@@ -108,17 +110,38 @@
     
 }
 
+.home_page_description p{
+    margin: 0;
+    padding: 0;
+    margin-bottom: 0.5rem;
+}
+
+.home_page_description h1, h2{
+    margin: 0;
+    padding: 0;
+
+}
+
+
+
 #about_me_text {
 
     font-size: clamp(0.9rem, 1vw, 1.2rem);
 
     font-weight: 400;
+
 }
 
 #about_me_heading {
     
     font-size: clamp(1.2rem, 2vw, 2rem);
+    margin-bottom: 0.5rem;
 
+}
+
+#prior_work_heading {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 
