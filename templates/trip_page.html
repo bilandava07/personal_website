@@ -2,7 +2,7 @@
 
 
 {% block preload_assets %}
-<link rel="preload" as="image" href="{{ url_for('static', filename='images/' + main_image.image_filename) }}"> {%
+<link rel="preload" as="image" href="{{ url_for('static', filename='images/compressed' + main_image.image_filename) }}"> {%
 endblock %}
 
 {% block leaflet %}
