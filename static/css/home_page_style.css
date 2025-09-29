@@ -1,24 +1,18 @@
-/* .home_page main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-} */
+.home_page main {
+
+}
 
 .home_page_main {
-    margin: min(50px, 10%);
+    margin: clamp(100px, 6%, 150px);
 
     justify-self: center;
 
     padding: var(--navbar-height) 0;
 }
 
-.page_grid 
  
 
 .home_page_contents_grid_container {
-
-    max-width: ;
 
 
     display: grid;
@@ -38,7 +32,7 @@
 
 .profile_picture_container {
 
-    width: clamp(40%,30vw,50%);
+    width: clamp(40%,28vw,47%);
 
 
     height: auto;
@@ -60,10 +54,11 @@
 
 
 .language_flags_container{
+
     grid-area: flags;
 
     margin-top: 1rem;
-    gap: 1rem;
+    gap: 1.3rem;
 
     display: flex;
     justify-self: center;
@@ -73,26 +68,60 @@
 }
 
 .language_flags_container .flag {
-    max-height: fit-content;
+    position: relative;
+    cursor: pointer;
 
+    max-height: fit-content;
     font-size: clamp(2rem, 1.8vw, 2.5rem);
+    transition: transform 0.35s;
 }
 
+.language_flags_container .flag::after {
+    content: attr(data-level);
+    font-size: clamp(0.7rem, 1vw, 0.9rem);
+    font-weight: 450;
+    padding: 15% 30%;
+    border-radius: 0.4rem;
+    position: absolute;
+    bottom: -50%;
+    left: 0%;
+    background: var(--secondary-bg-color);
+    color: var(--text-color);
+    opacity: 0;
+    transition: opacity 0.35s;
+}
+
+.language_flags_container .flag:hover::after {
+    opacity: 1;
+}
+
+.language_flags_container .flag:hover{
+    transform: scale(1.13);
+
+}
+
+
+
 .contact_location_container {
-    margin-top: 3rem;
+    margin-top: clamp(1rem, 3vh, 3rem);
     grid-area: contact;
     justify-self: center;
+}
+
+.contact_location_container p {
+    font-size: clamp(0.8rem, 0.8vw, 1rem);
+    font-weight: 350;
 }
 
 #contact {
     padding: 0;
     margin: 0;
-    font-size: clamp(1.2rem, 1.5vw, 2rem);
+    font-size: clamp(1.1rem, 1.6vw, 2rem);
     font-weight: 700;
 }
 
 #location {
-    font-size: clamp(1rem, 1.1vw, 1.5rem);
+    font-size: clamp(0.9rem, 1.1vw, 1.5rem);
     font-weight: 500;
 }
 
@@ -105,15 +134,17 @@
 .home_page_description {
     grid-area: description;
 
+    width: 100%;
 
-    width: clamp(30rem, 30vw, 40vw);
+
+    width: clamp(20rem, 30vw, 40vw);
     
 }
 
 .home_page_description p{
     margin: 0;
     padding: 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 }
 
 .home_page_description h1, h2{
@@ -126,22 +157,27 @@
 
 #about_me_text {
 
-    font-size: clamp(0.9rem, 1vw, 1.2rem);
+    font-size: clamp(0.9rem, 1vw, 1.31rem);
 
-    font-weight: 400;
+    font-weight: 280;
 
 }
+
+#about_me_text b{
+    font-weight: 550;
+}
+
 
 #about_me_heading {
     
     font-size: clamp(1.2rem, 2vw, 2rem);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 
 }
 
 #prior_work_heading {
     margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 }
 
 
@@ -161,8 +197,13 @@
 
 
 .tech_stack_badges svg{
-    width: clamp(2.2rem, 4vw, 4.5rem);
+    width: clamp(2.7rem, 3.5vw, 4.5rem);
     height: auto;
+    transition: transform 0.2s;
+}
+
+.tech_stack_badges svg:hover{
+    transform: scale(1.1);
 }
 
 .general_dev_badges_container,
@@ -183,4 +224,129 @@
 #sqlite_icon {
     fill: var(--text-color);
 }
+
+
+@media(max-width: 1179px) {
+
+
+    .home_page_contents_grid_container{
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+        "profile_pic"
+        "description"
+        "flags"
+        "tech_stack"
+        "contact";
+        gap: 1rem 0;
+    }
+
+    .profile_picture_container{
+        justify-self: center;
+        width: clamp(12rem, 35vw,47%);
+
+    }
+    
+    .home_page_description{
+        justify-self: center;
+        text-align: center;
+        width: 100%;
+
+
+        width: clamp(20rem, 55vw, 55vw);
+        font-size: ;
+    }
+    
+    #about_me_text {
+
+    font-size: clamp(0.9rem, 2vw, 1.31rem);
+
+    font-weight: 320;
+
+    }
+
+    #about_me_heading {
+        
+        font-size: clamp(1.2rem, 3vw, 2rem);
+        margin-bottom: 1rem;
+
+    }
+
+    #prior_work_heading {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+
+    .tech_stack_badges{
+        margin: 0;
+        justify-self: center;
+
+    }
+    .tech_stack_badges svg {
+        width: clamp(2.5rem, 6vw, 6rem);
+    }
+    .contact_location_container{
+        margin: 0;
+
+        font-weight: 400;
+
+        display: grid;
+        grid-template-areas: 
+        "email github"
+        "location location";
+
+
+
+    }
+
+    .contact_location_container p{
+        margin: 0.8rem;
+        font-size: clamp(0.7rem, 2vw, 1rem);
+
+    }
+
+    #contact {
+        display: none;
+
+    }
+
+    .home_page_main {
+        margin: 1.5rem 0;
+
+
+
+        justify-self: center;
+
+        padding-top: var(--navbar-height);
+        padding-bottom: 0;
+    }
+
+    #prior_work_heading {
+        margin: 0.5rem 0;
+    }
+
+    .footer{
+        margin-top: 0;
+    }
+
+
+    #location {
+        grid-area: location;
+        justify-self: center;
+        font-size: clamp(0.8rem, 2vw, 1rem);
+        
+    }
+
+
+
+    
+}
+
+/* 
+* {
+    outline: 1px solid red;
+} */
+
+
 
