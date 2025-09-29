@@ -82,7 +82,7 @@ body
 
 .navlist
 {
-    font-size: clamp(1rem, 1.5vw,1.5rem);
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
     padding: 0;
     margin: auto 2em auto auto;
     display: flex;
@@ -232,7 +232,7 @@ aside {
 
 #my_name
 {
-    font-size: clamp(1.5rem, 3vw, 3rem);
+    font-size: clamp(1.5rem, 2.5vw, 2.7rem);
     font-weight: 900;
     list-style: none;
     text-decoration: none;
@@ -390,8 +390,9 @@ body
     width: clamp(250px, 35%, 600px); /* min, preferred, max width */
     gap: clamp(2rem, 8vh, 10rem);
     height: auto;
-    font-size: clamp(1.3rem, 1.5vw, 3rem);
-    font-weight: lighter;
+    font-size: clamp(1.3rem, 1.35vw, 3rem);
+    font-weight: 400;
+    line-height: 1.35;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -922,7 +923,7 @@ body
 .trip_stats{
     grid-area: stats;
 
-    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    font-size: clamp(1rem, 1.3vw, 1.5rem);
     font-weight: 450;
 
     max-height: 48vh;
@@ -961,7 +962,7 @@ body
 
 .elevation_icon{
     fill: var(--text-color);
-    width: 4rem;
+    width: clamp(3rem, 3vw, 4rem);
     aspect-ratio: 1/1;
 
 }
@@ -969,7 +970,7 @@ body
 .distance_stats_icon{
     stroke: var(--text-color);
     stroke-width: 13;
-    width: 3.5rem;
+    width: clamp(2.7rem, 2.8vw, 3.5rem);
     aspect-ratio: 1/1;
     margin-bottom: 0.6rem;
 
@@ -978,7 +979,7 @@ body
 .time_stats_icon {
     stroke: var(--text-color);
     fill: var(--text-color);
-    width: 3.2rem;
+    width: clamp(2.5rem, 2.6vw, 3.2rem);
     aspect-ratio: 1/1;
     margin-bottom: 1rem;
 }
@@ -986,7 +987,7 @@ body
 .speed_stats_icon{
     stroke: var(--text-color);
     fill: var(--text-color);
-    width: 5.5rem;
+    width: clamp(4rem, 6.5vw, 5.5rem);
     aspect-ratio: 1/1;
 }
 
@@ -1179,11 +1180,10 @@ body
     }
 
     #cycling_hero_text_block{
-        width: clamp(180px, 35%, 600px); /* min, preferred, max width */
-        gap: clamp(2rem, 8vh, 10rem);
+        width: clamp(180px, 27%, 600px); /* min, preferred, max width */
+        gap: clamp(2rem, 15vh, 10rem);
         height: auto;
-        font-size: clamp(1.3rem, 1.4vw, 3rem);
-        font-weight: lighter;
+        font-size: clamp(1.3rem, 1.3vw, 3rem);
         display: flex;
         flex-direction: column;
         align-items: center;
