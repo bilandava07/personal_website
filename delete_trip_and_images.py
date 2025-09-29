@@ -9,13 +9,24 @@ with sqlite3.connect("trips.db") as conn:
 
         cursor = conn.cursor()
 
-        # Get the last trip_id
-        cursor.execute("SELECT * FROM trips ORDER BY trip_id DESC LIMIT 1")
-        last_trip = cursor.fetchone()
+        trip_to_delete = None
 
-        last_trip_id = last_trip['trip_id']
+        while True:
 
-        gejson_filename = last_trip['geojson_filename']
+            trip_id_to_delete = input("Trip ID to delete['last' to delete last trip]: \n")
+
+            if trip_id_to_delete.lower() == 'last':
+
+                # Get the last trip_id
+                cursor.execute("SELECT * FROM trips ORDER BY trip_id DESC LIMIT 1")
+
+            else:
+                cursor.execute(f"SELECT * FROM trips WHERE trip_id == {trip_id_to_delete}")
+                break
+
+        trip_to_delete = cursor.fetchone()
+
+        gejson_filename = trip_to_delete['geojson_filename']
 
         path_to_geojson = os.path.join('./static/geo_json', gejson_filename)
 
@@ -25,14 +36,14 @@ with sqlite3.connect("trips.db") as conn:
         else:
             print("Could not find the geojson file! Not deleted")
         
-        if last_trip_id:
+        if trip_id_to_delete:
             # Get all image filenames to delete the files later
-            cursor.execute("SELECT image_filename FROM trips_images WHERE trip_id = ?", (last_trip_id,))
+            cursor.execute("SELECT image_filename FROM trips_images WHERE trip_id = ?", (trip_id_to_delete,))
 
             image_files = [row['image_filename'] for row in cursor.fetchall()]
 
             # Delete images from DB
-            cursor.execute("DELETE FROM trips_images WHERE trip_id = ?", (last_trip_id,))
+            cursor.execute("DELETE FROM trips_images WHERE trip_id = ?", (trip_id_to_delete,))
 
             # Delete image files from disk
             for filename in image_files:
@@ -42,12 +53,12 @@ with sqlite3.connect("trips.db") as conn:
                 else:
                     print("Could not find the image! Not deleted")
 
-            print(f"Trip {last_trip_id} and its images have been deleted.")
+            print(f"Trip {trip_id_to_delete} and its images have been deleted.")
 
 
             # Delete video if exists
             video_row = cursor.execute(
-                "SELECT trip_video_filename FROM trips WHERE trip_id = ?", (last_trip_id,)
+                "SELECT trip_video_filename FROM trips WHERE trip_id = ?", (trip_id_to_delete,)
             ).fetchone()
 
             video_filename = video_row['trip_video_filename'] if video_row else None
@@ -66,7 +77,7 @@ with sqlite3.connect("trips.db") as conn:
 
             # Delete trip from DB
             print("Deleting the trip itself from the database...")
-            cursor.execute("DELETE FROM trips WHERE trip_id = ?", (last_trip_id,))
+            cursor.execute("DELETE FROM trips WHERE trip_id = ?", (trip_id_to_delete,))
 
             conn.commit()
             
