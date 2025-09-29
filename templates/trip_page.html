@@ -45,7 +45,7 @@ endblock %}
 
                 <div class="trip_main_image_div">
                         <img id="trip_main_image"
-                                src="{{ url_for('static', filename='images/' + main_image.image_filename) }}">
+                                src="{{ url_for('static', filename='images/compressed/' + main_image.image_filename) }}">
                 </div>
 
                 {% endif %}
@@ -124,7 +124,7 @@ endblock %}
 
 
                 <img class="trip_photo_card_{{ image.photo_class }}"
-                        src="{{ url_for('static', filename='images/' + image.image_filename) }}">
+                        src="{{ url_for('static', filename='images/compressed/' + image.image_filename) }}">
 
 
 
