@@ -15,15 +15,14 @@
 
     display: grid;
 
-    grid-template-columns: 35vw 1fr;
+    grid-template-columns: minmax(20rem, 35vw) auto;
     grid-auto-rows: auto;
+    
+    justify-content: center;
 
     /* for whatever reason this part fixes safari allignment 
     (still did not fully understand what is wrong with this browser tbh)
     */
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
 
     grid-template-areas:
         "profile_pic description"
