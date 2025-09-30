@@ -4,6 +4,18 @@ for all pages across the website (navbar, footer etc.)-->
 
 <html class="darkmode">
 
+<script>
+
+    let initial_doc_html = document.querySelector("html")
+    // respect user's preference and change the theme at the beginning
+    if (localStorage.getItem("theme") === "light") {
+        initial_doc_html.classList.remove("darkmode");
+    }
+    else {
+        localStorage.setItem('theme', 'dark');
+    }
+</script>
+
 <head>
     <!-- This is the title of the page that is shown in the tab seciton of the browser-->
     <title>

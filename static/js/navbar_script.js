@@ -19,15 +19,7 @@ const theme_switch = document.querySelector("#theme_switch")
 const sidebar = document.querySelector('#sidebar')
 
 
-// respect user's preference and change the theme at the beginning
-if (localStorage.getItem("theme") === "light")
-{
-    doc_html.classList.remove("darkmode");
-}
-else
-{
-    localStorage.setItem('theme', 'dark');
-}
+
 
 function enable_darkmode()
 {
