@@ -14,7 +14,7 @@ The only recurring cost is about **€10/year for the domain**.
 
 ---
 
-## Cycling Page – The Main Motivation 🚴
+## Cycling Page – The Main Motivation
 The core reason for this project was building the **cycling page**, which solves a real problem for me.  
 
 After my rides, I wanted to share experiences with friends who don’t use Strava or Komoot.  
