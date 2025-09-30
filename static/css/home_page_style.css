@@ -1,6 +1,4 @@
-.home_page main {
-
-}
+.home_page main {}
 
 .home_page_main {
     margin: clamp(70px, 7vw, 300px) 0;
@@ -10,7 +8,7 @@
     padding: var(--navbar-height) 0;
 }
 
- 
+
 
 .home_page_contents_grid_container {
 
@@ -20,10 +18,17 @@
     grid-template-columns: 35vw 1fr;
     grid-auto-rows: auto;
 
-    grid-template-areas: 
-    "profile_pic description"
-    "flags description"
-    "contact tech_stack";
+    /* for whatever reason this part fixes safari allignment 
+    (still did not fully understand what is wrong with this browser tbh)
+    */
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+
+    grid-template-areas:
+        "profile_pic description"
+        "flags description"
+        "contact tech_stack";
 
     gap: 0 2rem;
 
@@ -32,7 +37,7 @@
 
 .profile_picture_container {
 
-    width: clamp(40%,30vw,50%);
+    width: clamp(40%, 30vw, 50%);
 
 
     height: auto;
@@ -53,7 +58,7 @@
 }
 
 
-.language_flags_container{
+.language_flags_container {
 
     grid-area: flags;
 
@@ -95,7 +100,7 @@
     opacity: 1;
 }
 
-.language_flags_container .flag:hover{
+.language_flags_container .flag:hover {
     transform: scale(1.13);
 
 }
@@ -141,7 +146,7 @@
 }
 
 #linkedin_github_container a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 #linkedin_icon:hover {
@@ -181,16 +186,17 @@
 
 
     width: clamp(20rem, 30vw, 40vw);
-    
+
 }
 
-.home_page_description p{
+.home_page_description p {
     margin: 0;
     padding: 0;
     margin-bottom: 0.8rem;
 }
 
-.home_page_description h1, h2{
+.home_page_description h1,
+h2 {
     margin: 0;
     padding: 0;
 
@@ -210,7 +216,7 @@
 
 }
 
-#about_me_text b{
+#about_me_text b {
     font-weight: 550;
     color: var(--text-color);
 }
@@ -218,7 +224,7 @@
 
 #about_me_heading {
     color: var(--text-color);
-    
+
     font-size: clamp(1.2rem, 2vw, 2rem);
     margin-bottom: 0.8rem;
 
@@ -247,13 +253,13 @@
 
 
 
-.tech_stack_badges svg{
+.tech_stack_badges svg {
     width: clamp(2.7rem, 3.5vw, 4.5rem);
     height: auto;
     transition: transform 0.2s;
 }
 
-.tech_stack_badges svg:hover{
+.tech_stack_badges svg:hover {
     transform: scale(1.1);
 }
 
@@ -280,25 +286,25 @@
 @media(max-width: 1179px) {
 
 
-    .home_page_contents_grid_container{
+    .home_page_contents_grid_container {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-areas:
-        "profile_pic"
-        "description"
-        "flags"
-        "tech_stack"
-        "contact";
+            "profile_pic"
+            "description"
+            "flags"
+            "tech_stack"
+            "contact";
         gap: 1rem 0;
     }
 
-    .profile_picture_container{
+    .profile_picture_container {
         justify-self: center;
-        width: clamp(12rem, 35vw,47%);
+        width: clamp(12rem, 35vw, 47%);
 
     }
-    
-    .home_page_description{
+
+    .home_page_description {
         justify-self: center;
         text-align: center;
         width: 100%;
@@ -307,7 +313,7 @@
         width: clamp(20rem, 55vw, 55vw);
         font-size: ;
     }
-    
+
     #about_me_text {
 
         font-size: clamp(0.9rem, 2vw, 1.31rem);
@@ -317,7 +323,7 @@
     }
 
     #about_me_heading {
-        
+
         font-size: clamp(1.2rem, 3vw, 2rem);
         margin-bottom: 1rem;
 
@@ -327,31 +333,33 @@
         margin-top: 1.5rem;
         margin-bottom: 1rem;
     }
-    
 
-    .tech_stack_badges{
+
+    .tech_stack_badges {
         margin: 0;
         justify-self: center;
 
     }
+
     .tech_stack_badges svg {
         width: clamp(2.5rem, 6vw, 6rem);
     }
-    .contact_location_container{
+
+    .contact_location_container {
         margin: 0;
 
         font-weight: 400;
 
         display: grid;
-        grid-template-areas: 
-        "email github"
-        "location location";
+        grid-template-areas:
+            "email github"
+            "location location";
 
 
 
     }
 
-    .contact_location_container p{
+    .contact_location_container p {
         margin: 0.8rem;
         font-size: clamp(0.7rem, 2vw, 1rem);
 
@@ -377,7 +385,7 @@
         margin: 0.5rem 0;
     }
 
-    .footer{
+    .footer {
         margin-top: 0;
     }
 
@@ -386,18 +394,15 @@
         grid-area: location;
         justify-self: center;
         font-size: clamp(0.8rem, 2vw, 1rem);
-        
+
     }
 
 
 
-    
+
 }
 
 /* 
 * {
     outline: 1px solid red;
 } */
-
-
-
