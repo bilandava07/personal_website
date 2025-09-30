@@ -7,7 +7,11 @@
     --accent-color: #E8175D;
     --footer-bg-color: var(--secondary-bg-color);
 
+    --darker-text-color: black;
+
     --cards-border-radius: 5%;
+
+    
 
     scrollbar-width: none;
     box-sizing: border-box; 
@@ -26,8 +30,10 @@
     --secondary-bg-color: #424242;
     --footer-bg-color: #383838; 
     --highlight-color: #9dbce8; 
-    --text-color: #f1f1f1;
+    --text-color: #ffffff;
     --accent-color: #E8175D;
+    --darker-text-color: #dddddd;
+    
 
 }
 
@@ -82,7 +88,7 @@ body
 
 .navlist
 {
-    font-size: clamp(1rem, 1.2vw, 1.25rem);
+    font-size: clamp(1rem, 1.25vw, 1.3rem);
     padding: 0;
     margin: auto 2em auto auto;
     display: flex;
@@ -110,7 +116,7 @@ body
 .navlist li a:hover,
 .navlist_hamburger li a:hover
 {
-    transform: scale(1.05);
+    transform: scale(1.07);
     transition: color 0.3s, transform 0.3s;
 }
 
