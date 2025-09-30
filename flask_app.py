@@ -319,7 +319,13 @@ def trip_page(trip_id : int, trip_slug : str):
 
     regular_images = [img for img in trip_data["images"] if not img["is_main"]]
 
-    return render_template('trip_page.html', trip = trip_data, main_image = main_image, regular_images = regular_images )
+    return render_template('trip_page.html', trip = trip_data, main_image = main_image, regular_images = regular_images)
+
+
+@app.route('/projects')
+def projects_page():
+    '''Renders projects page with overview of all projects'''
+    return render_template('projects_page.html')
 
 
 
