@@ -797,10 +797,15 @@ body
     margin-top: calc(var(--navbar-height) + max(5px, 2%));
     display: grid;
 
-    justify-self: center;
+    /* Safari allignment fix */
+    width: 80vw;
+    margin-left: auto;
+    margin-right: auto;
 
-
+    
+    
     grid-template-columns: minmax(0, 40vw) minmax(0, 40vw);
+    justify-self: center;
     /* grid-template-rows: repeat(2, calc(100vh - var(--navbar-height))); */
     grid-template-rows: auto auto;
 
