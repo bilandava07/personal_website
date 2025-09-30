@@ -32,7 +32,7 @@
 
 .profile_picture_container {
 
-    width: clamp(40%,28vw,47%);
+    width: clamp(40%,30vw,50%);
 
 
     height: auto;
@@ -103,9 +103,12 @@
 
 
 .contact_location_container {
-    margin-top: clamp(1rem, 3vh, 3rem);
+    margin-top: clamp(1rem, 2vh, 2.7rem);
     grid-area: contact;
     justify-self: center;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .contact_location_container p {
@@ -116,13 +119,36 @@
 #contact {
     padding: 0;
     margin: 0;
+    margin-bottom: 1rem;
     font-size: clamp(1.1rem, 1.6vw, 2rem);
     font-weight: 700;
 }
 
+#linkedin_icon {
+    fill: var(--text-color);
+
+    width: clamp(2rem, 5vh, 4rem);
+}
+
+#email_container {
+    margin: 1rem 0;
+    margin-left: 0.5rem;
+
+    font-size: clamp(1rem, 0.8vw, 1.4rem);
+}
+
+
+#github_icon {
+    fill: var(--text-color);
+    width: clamp(2rem, 5vh, 4rem);
+}
+
+
 #location {
     font-size: clamp(0.9rem, 1.1vw, 1.5rem);
     font-weight: 500;
+    margin-left: 0.35rem;
+    margin-top: 0.5rem;
 }
 
 
