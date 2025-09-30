@@ -74,17 +74,6 @@ theme_switch.addEventListener("click", () => {
 })
 
 
-const navbar = document.querySelector('.navbar_container');
-
-const navbarHeight = navbar.offsetHeight;
-document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`);
-
-window.addEventListener('resize', () => {
-  const navbarHeight = navbar.offsetHeight;
-  document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`);
-});
-
-
 
 
 
