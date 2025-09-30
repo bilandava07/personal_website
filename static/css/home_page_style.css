@@ -202,16 +202,22 @@
 
     font-size: clamp(0.9rem, 1vw, 1.31rem);
 
+    line-height: 1.35;
+
     font-weight: 280;
+
+    color: var(--darker-text-color);
 
 }
 
 #about_me_text b{
     font-weight: 550;
+    color: var(--text-color);
 }
 
 
 #about_me_heading {
+    color: var(--text-color);
     
     font-size: clamp(1.2rem, 2vw, 2rem);
     margin-bottom: 0.8rem;
@@ -219,6 +225,8 @@
 }
 
 #prior_work_heading {
+
+    color: var(--text-color);
     margin-top: 1.5rem;
     margin-bottom: 0.8rem;
 }
@@ -302,9 +310,9 @@
     
     #about_me_text {
 
-    font-size: clamp(0.9rem, 2vw, 1.31rem);
+        font-size: clamp(0.9rem, 2vw, 1.31rem);
 
-    font-weight: 320;
+        font-weight: 320;
 
     }
 
