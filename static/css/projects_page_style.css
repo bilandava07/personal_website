@@ -1,5 +1,5 @@
 .projects_main_flex {
-    margin: clamp(50px, 3vw, 100px) clamp(50px, 14vw, 30rem);
+    margin: clamp(40px, 2vw, 100px) clamp(50px, 14vw, 30rem);
 
     padding: var(--navbar-height) 0;
 
