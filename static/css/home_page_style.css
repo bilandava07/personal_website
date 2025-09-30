@@ -3,7 +3,7 @@
 }
 
 .home_page_main {
-    margin: clamp(100px, 6%, 150px);
+    margin: clamp(70px, 7vw, 300px) 0;
 
     justify-self: center;
 
@@ -116,19 +116,14 @@
     font-weight: 350;
 }
 
-#contact {
+/* #contact {
     padding: 0;
     margin: 0;
     margin-bottom: 1rem;
     font-size: clamp(1.1rem, 1.6vw, 2rem);
     font-weight: 700;
-}
+} */
 
-#linkedin_icon {
-    fill: var(--text-color);
-
-    width: clamp(2rem, 5vh, 4rem);
-}
 
 #email_container {
     margin: 1rem 0;
@@ -138,10 +133,32 @@
 }
 
 
+#linkedin_icon {
+    fill: var(--text-color);
+
+    width: clamp(2rem, 5vh, 4rem);
+    transition: transform 0.3s;
+}
+
+#linkedin_github_container a {
+  text-decoration: none;
+}
+
+#linkedin_icon:hover {
+    transform: scale(1.1);
+}
+
+
 #github_icon {
     fill: var(--text-color);
     width: clamp(2rem, 5vh, 4rem);
+    transition: transform 0.3s;
 }
+
+#github_icon:hover {
+    transform: scale(1.1);
+}
+
 
 
 #location {
