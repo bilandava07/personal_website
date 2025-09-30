@@ -2,6 +2,10 @@
 
 {% block body_class %} home_page {% endblock %}
 
+
+{% block preload_assets %}
+<link rel="preload" as="image" href="/static/images/compressed/profile_picture.jpeg"> {% endblock %}
+
 {% block additional_css %}
 <link href="/static/css/home_page_style.css" rel="stylesheet">
 {% endblock %}
@@ -16,7 +20,7 @@
 
         <div class="profile_picture_container">
 
-            <img id="profile_picture" src="static/images/profile_picture.jpeg">
+            <img id="profile_picture" src="static/images/compressed/profile_picture.jpeg">
 
 
 
