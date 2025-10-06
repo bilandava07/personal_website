@@ -36,3 +36,6 @@ static/geo_json
 trips.db
 .copy_media_to_deployment.sh.swp
 alter_table.py
+
+trips_folders
+
