@@ -79,7 +79,7 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
                 "ffmpeg",
                 "-y",  # overwrite existing output
                 "-i", input_path,
-                "-vf", "scale='min(800,iw)':'min(600,ih)':force_original_aspect_ratio=decrease",
+                "-vf", "scale='if(gt(iw,ih),1600,-1)':'if(gt(ih,iw),1600,-1)'",
                 "-q:v", str(quality),
                 output_path
             ]
@@ -101,7 +101,7 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
             "ffmpeg",
             "-y",  # overwrite existing output
             "-i", input_path,
-            "-vf", "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease",
+            "-vf", "scale='if(gt(iw,ih),1600,-1)':'if(gt(ih,iw),1600,-1)'",
             "-q:v", str(quality),
             output_path
         ]
