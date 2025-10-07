@@ -1,4 +1,5 @@
 import os
+import subprocess
 import shutil
 import json
 import sqlite3
@@ -60,23 +61,56 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
     main_image_exists = False
 
     for image_filename in images_to_add:
+        input_path = os.path.join(full_path_to_dir, image_filename)
+
+
         if image_filename.lower().startswith('main'):
             is_main = 1
             main_image_exists = True
+
+            project_compressed_previews_dir = '/Users/dava/Projects/web_dev/my_website/static/images/compressed_previews' 
+            output_path = os.path.join(project_compressed_previews_dir, image_filename)
+
+            # Compress and save images to images/compressed_previews too
+            quality = 5 
+
+            # Run FFmpeg compression
+            cmd = [
+                "ffmpeg",
+                "-y",  # overwrite existing output
+                "-i", input_path,
+                "-vf", "scale='min(800,iw)':'min(600,ih)':force_original_aspect_ratio=decrease",
+                "-q:v", str(quality),
+                output_path
+            ]
+            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            
         else:
             is_main = 0
 
-        full_path = os.path.join(full_path_to_dir, image_filename)
 
-        project_images_dir = '/Users/dava/Projects/web_dev/my_website/static/images'
+        project_compressed_images_dir = '/Users/dava/Projects/web_dev/my_website/static/images/compressed'
 
-        dest_path = os.path.join(project_images_dir, image_filename)
+        output_path = os.path.join(project_compressed_images_dir, image_filename)
 
-        shutil.copy(full_path, dest_path)
+        # Compress and save images to images/compressed
+        quality = 2 
+
+        # Run FFmpeg compression
+        cmd = [
+            "ffmpeg",
+            "-y",  # overwrite existing output
+            "-i", input_path,
+            "-vf", "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease",
+            "-q:v", str(quality),
+            output_path
+        ]
+
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
         # Figure out the dimensions of the image
-        image_file = Image.open(full_path)
+        image_file = Image.open(output_path)
         image_width, image_height = image_file.size
 
         insert_statement = '''
