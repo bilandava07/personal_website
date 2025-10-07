@@ -47,13 +47,24 @@ with sqlite3.connect("trips.db") as conn:
             # Delete images from DB
             cursor.execute("DELETE FROM trips_images WHERE trip_id = ?", (trip_id_to_delete,))
 
-            # Delete image files from disk
+            # Delete image files from compressed
             for filename in image_files:
-                path = os.path.join('./static/images', filename)
-                if os.path.exists(path):
-                    os.remove(path)
+                path_compressed = os.path.join('./static/images/compressed', filename)
+                path_compressed_preview = os.path.join('./static/images/compressed_previews', filename)
+
+                if os.path.exists(path_compressed):
+                    os.remove(path_compressed)
+
+                # Delete previews too
+                elif os.path.exists(path_compressed_preview):
+                    os.remove(path_compressed_preview)
+
                 else:
                     print("Could not find the image! Not deleted")
+
+
+
+
 
             print(f"Trip {trip_id_to_delete} and its images have been deleted.")
 
@@ -75,7 +86,7 @@ with sqlite3.connect("trips.db") as conn:
                     print("Could not find the video file! Not deleted")
 
             else:
-                print("No vide filename associated with the trip...")
+                print("No video filename associated with the trip...")
 
             # Delete trip from DB
             print("Deleting the trip itself from the database...")
