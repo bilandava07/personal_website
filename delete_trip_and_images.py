@@ -16,15 +16,17 @@ with sqlite3.connect("trips.db") as conn:
             trip_id_to_delete = input("Trip ID to delete['last' to delete last trip]: \n")
 
             if trip_id_to_delete.lower() == 'last':
-
                 # Get the last trip_id
                 cursor.execute("SELECT * FROM trips ORDER BY trip_id DESC LIMIT 1")
+                break
 
             else:
                 cursor.execute(f"SELECT * FROM trips WHERE trip_id == {trip_id_to_delete}")
                 break
 
         trip_to_delete = cursor.fetchone()
+
+        trip_id_to_delete = trip_to_delete['trip_id']
 
         gejson_filename = trip_to_delete['geojson_filename']
 
