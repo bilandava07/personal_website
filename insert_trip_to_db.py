@@ -35,13 +35,6 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
     if mp4_video_filename is not None:
 
 
-        insert_statement = '''
-            UPDATE trips
-            SET trip_video_filename = ?
-            WHERE trip_id = ?
-            '''
-
-        cursor.execute(insert_statement, (mp4_video_filename, trip_id))
 
         # Copy the video to the project directory
 
@@ -51,9 +44,33 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
 
         dest_path = os.path.join(project_videso_dir, mp4_video_filename)
 
-        shutil.copy(full_path, dest_path)
 
-        print("Added and copied the video")
+        # --- Compress full video (with faststart for web playback) ---
+        compress_cmd = [
+            "ffmpeg",
+            "-y",
+            "-i", full_path,
+            "-vcodec", "libx265",
+            "-preset", "slow",
+            "-crf", "28",
+            "-acodec", "aac",
+            "-b:a", "128k",
+            "-vf", "scale='min(1280,iw)':'min(720,ih)'",
+            "-movflags", "+faststart",
+            dest_path
+        ]
+        subprocess.run(compress_cmd, check=True)
+
+
+        insert_statement = '''
+            UPDATE trips
+            SET trip_video_filename = ?
+            WHERE trip_id = ?
+            '''
+
+        cursor.execute(insert_statement, (mp4_video_filename, trip_id))
+
+        print("Compressed and insertedthe video")
 
 
 
@@ -83,7 +100,7 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
                 "-q:v", str(quality),
                 output_path
             ]
-            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
             
         else:
             is_main = 0
@@ -106,7 +123,7 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
             output_path
         ]
 
-        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 
         # Figure out the dimensions of the image
@@ -250,8 +267,8 @@ def insert_trip_to_db(connection: sqlite3.Connection, cursor: sqlite3.Cursor):
         connection.commit()
         print("\nThe trip was commited to the database")
     else:
-        connection.rollback()
         print("\nInsert aborted, nothing was saved to the database")
+        connection.close()
 
 if __name__ == '__main__':
     # Establish connectin to the database
