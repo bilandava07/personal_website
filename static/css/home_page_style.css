@@ -1,4 +1,11 @@
-.home_page main {}
+.home_page main {
+}
+
+.links{
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+}
 
 .home_page_main {
     margin: clamp(70px, 7vw, 300px) 0;
