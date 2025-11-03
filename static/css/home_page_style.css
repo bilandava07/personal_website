@@ -268,7 +268,7 @@ h2 {
 
 
 .tech_stack_badges svg {
-    width: clamp(2.7rem, 3.5vw, 4.5rem);
+    width: clamp(2rem, 3.5vw, 4.5rem);
     height: auto;
     transition: transform 0.2s;
 }
@@ -445,6 +445,31 @@ h2 {
     }
 
 
+
+
+
+}
+
+@media(max-width: 799px) {
+    .cv_print_div {
+
+        padding: 0.2rem;
+
+
+        bottom: 0.8rem;
+        right: 0.8rem;
+
+        width: clamp(0.5rem, 5vw, 1.2rem);
+        transition: transform 0.3s;
+    }
+
+    #about_me_text {
+
+            font-size: clamp(0.8rem, 1.8vw, 1.31rem);
+
+            font-weight: 320;
+
+        }
 
 
 }
