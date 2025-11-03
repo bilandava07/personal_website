@@ -5,6 +5,14 @@
     text-decoration: none;
     color: var(--text-color);
     font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.3s ease; 
+    display: inline-block; 
+    border-bottom: 1.2px solid transparent; /* invisible by default */
+}
+
+.links:hover {
+    border-bottom-color: var(--text-color);   
 }
 
 .home_page_main {
@@ -285,6 +293,39 @@ h2 {
 }
 
 #sqlite_icon {
+    fill: var(--text-color);
+}
+
+
+
+/* CV stuff */
+
+.cv_print_div {
+    position: fixed;
+    padding: 0.6rem;
+
+    border-radius: 25%;
+
+    border: 3px solid var(--text-color);
+
+    background-color: var(--secondary-bg-color);
+
+
+    bottom: 3.2rem;
+    right: 3rem;
+
+    width: clamp(1.5rem, 2.2vw, 2.2rem);
+    transition: transform 0.3s;
+}
+
+.cv_print_div:hover{
+    transform: scale(1.1);
+
+}
+
+.cv_print_svg{
+    width: 100%;
+    /* fill: var(--text-color); */
     fill: var(--text-color);
 }
 
