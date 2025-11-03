@@ -50,7 +50,7 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
             "ffmpeg",
             "-y",
             "-i", full_path,
-            "-vcodec", "libx265",
+            "-vcodec", "libx264",
             "-preset", "slow",
             "-crf", "28",
             "-acodec", "aac",
