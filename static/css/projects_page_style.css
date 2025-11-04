@@ -59,7 +59,7 @@
 .github_icon {
     margin-right: 1rem;
     fill: var(--text-color);
-    width: clamp(1.5rem, 4.3vh, 3.5rem);
+    width: clamp(1.5rem, 4vh, 3.5rem);
     transition: transform 0.3s;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .project_description{
-    font-size: clamp(0.9rem, 2vw, 1.28rem);
+    font-size: clamp(0.9rem, 1.2vw, 1.31rem);
     font-weight: 300;
     line-height: 1.44;
     color: var(--darker-text-color);
@@ -87,7 +87,7 @@
     width: 95%;
     object-fit: cover;
     border-radius: 1rem;
-    border: 1px solid white;
+    border: 2px solid var(--text-color);
     display: block;
 
 
