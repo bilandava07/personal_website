@@ -465,7 +465,7 @@ h2 {
 
     #about_me_text {
 
-            font-size: clamp(0.8rem, 1.8vw, 1.31rem);
+            font-size: clamp(0.8rem, 2vw, 1.31rem);
 
             font-weight: 320;
 
