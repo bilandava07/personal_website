@@ -73,12 +73,12 @@ def convert_trip_stats(raw_trip) -> dict:
 
     # convert time from seconds to respective formats
 
-    total_time_hr = round(raw_trip['total_time'] / 3600)
+    total_time_hr = int(raw_trip['total_time'] // 3600)
     total_time_min = round((raw_trip['total_time'] % 3600) / 60)
 
     total_time_formatted = f"{total_time_hr} h {total_time_min} m"
 
-    moving_time_hr = round(raw_trip['moving_time'] / 3600)
+    moving_time_hr = int(raw_trip['moving_time'] // 3600)
     moving_time_m = round((raw_trip['moving_time'] % 3600) / 60)
 
     moving_time_formatted = f"{moving_time_hr} h {moving_time_m} m"
