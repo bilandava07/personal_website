@@ -70,7 +70,7 @@ def add_images_to_trip(cursor: sqlite3.Cursor, trip_id : int | None, all_files_i
 
         cursor.execute(insert_statement, (mp4_video_filename, trip_id))
 
-        print("Compressed and insertedthe video")
+        print("Compressed and inserted the video")
 
 
 
