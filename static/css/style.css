@@ -28,7 +28,7 @@
 {
     --background-color: #272727;
     --secondary-bg-color: #3a3a3a;
-    --footer-bg-color: #383838; 
+    --footer-bg-color:var(--secondary-bg-color); 
     --highlight-color: #9dbce8; 
     --text-color: #ffffff;
     --accent-color: #E8175D;
