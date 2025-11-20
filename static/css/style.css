@@ -348,9 +348,8 @@ body
 
 
 
-/* Makes excpetions for the hero page for navbar and sidbar  */
+/* Makes exceptions for the hero page for the navbar and the sidebar  */
 .navbar_container.hero_active {
-    backdrop-filter: blur(5px);
     background-color: transparent;
     color: white;
 }
@@ -361,7 +360,7 @@ body
 }
 
 #sidebar.hero_active {
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(5px);
     background-color: rgba(0,0,0,0);
     color: white;
 }
